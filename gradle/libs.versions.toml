@@ -34,6 +34,7 @@ mockk = "1.14.9"
 coroutinesTest = "1.10.2"
 archCoreTesting = "2.2.0"
 ksp = "2.3.4"
+kotlinxSerializationJson = "1.10.0"
 
 
 [libraries]
@@ -88,6 +89,7 @@ mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "moc
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTesting" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 
 [plugins]
