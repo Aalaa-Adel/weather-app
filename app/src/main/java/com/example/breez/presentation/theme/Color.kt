@@ -1,4 +1,4 @@
-package com.example.breez.ui.theme
+package com.example.breez.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

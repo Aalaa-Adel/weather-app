@@ -1,4 +1,4 @@
-package com.example.breez.navigation
+package com.example.breez.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
