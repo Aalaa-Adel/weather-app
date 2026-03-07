@@ -1,6 +1,7 @@
 package com.example.breez
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,22 +12,28 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import com.example.breez.navigation.NavGraph
-import com.example.breez.ui.theme.AppGradients
-import com.example.breez.ui.theme.BreezTheme
-import com.example.breez.ui.theme.DarkGradientBottom
-import com.example.breez.ui.theme.DarkGradientTop
-import com.example.breez.ui.theme.LightGradientBottom
-import com.example.breez.ui.theme.LightGradientTop
+import androidx.lifecycle.lifecycleScope
+import com.example.breez.data.repository.WeatherRepository
+import com.example.breez.data.util.ApiResult
+import com.example.breez.presentation.navigation.NavGraph
+import com.example.breez.presentation.theme.AppGradients
+import com.example.breez.presentation.theme.BreezTheme
+import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var repository: WeatherRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             BreezTheme {
-               NavGraph()
+                NavGraph()
             }
 
         }
