@@ -38,7 +38,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideWeatherRemoteDataSource(@ApplicationContext context: Context, apiService: WeatherApiService): WeatherRemoteDataSource {
+    fun provideWeatherRemoteDataSource(
+        @ApplicationContext context: Context,
+        apiService: WeatherApiService
+    ): WeatherRemoteDataSource {
         return WeatherRemoteDataSource(context, apiService)
     }
 
@@ -46,7 +49,7 @@ object NetworkModule {
     @Singleton
     fun provideWeatherRepository(remoteDataSource: WeatherRemoteDataSource): WeatherRepository {
         return WeatherRepositoryImpl(remoteDataSource)
-}
+    }
 
 
 }
