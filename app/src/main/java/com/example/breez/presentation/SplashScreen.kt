@@ -1,18 +1,36 @@
 package com.example.breez.presentation
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
@@ -30,14 +48,13 @@ import kotlin.math.sin
 
 @Composable
 fun SplashScreen(onFinish: () -> Unit) {
-
-    val SPLASH_TOTAL_MS = 5000L
+    val splashTotalMs = 2600L
 
     val logoAlpha = remember { Animatable(0f) }
-    val logoScale = remember { Animatable(0.75f) }
-    val logoRotation = remember { Animatable(-8f) }
+    val logoScale = remember { Animatable(0.76f) }
+    val logoRotation = remember { Animatable(-6f) }
     val contentAlpha = remember { Animatable(0f) }
-    val textOffset = remember { Animatable(14f) }
+    val textOffset = remember { Animatable(12f) }
 
     val onBg = MaterialTheme.colorScheme.onBackground
     val density = LocalDensity.current
@@ -74,16 +91,16 @@ fun SplashScreen(onFinish: () -> Unit) {
     )
 
     LaunchedEffect(Unit) {
-        launch { logoAlpha.animateTo(1f, tween(380)) }
-        launch { contentAlpha.animateTo(1f, tween(520)) }
+        launch { logoAlpha.animateTo(1f, tween(420)) }
+        launch { contentAlpha.animateTo(1f, tween(560)) }
 
         launch {
             logoScale.animateTo(
                 targetValue = 1f,
                 animationSpec = keyframes {
                     durationMillis = 950
-                    0.75f at 0
-                    1.10f at 650
+                    0.76f at 0
+                    1.08f at 650
                     1.0f at 950
                 }
             )
@@ -94,7 +111,7 @@ fun SplashScreen(onFinish: () -> Unit) {
                 targetValue = 0f,
                 animationSpec = keyframes {
                     durationMillis = 950
-                    -8f at 0
+                    -6f at 0
                     2f at 650
                     0f at 950
                 }
@@ -108,7 +125,7 @@ fun SplashScreen(onFinish: () -> Unit) {
             )
         }
 
-        delay(SPLASH_TOTAL_MS)
+        delay(splashTotalMs)
         onFinish()
     }
 
@@ -117,27 +134,23 @@ fun SplashScreen(onFinish: () -> Unit) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-
-            val haloSize = 340.dp
-
             Box(
                 modifier = Modifier
-                    .size(haloSize)
+                    .size(340.dp)
                     .clip(CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Canvas(modifier = Modifier.fillMaxSize()) {
                     val c = center
-
                     val baseR = size.minDimension * 0.40f
                     val pulseR = baseR + (size.minDimension * 0.07f * pulse)
 
                     drawCircle(
-                        brush = androidx.compose.ui.graphics.Brush.radialGradient(
+                        brush = Brush.radialGradient(
                             colors = listOf(
                                 onBg.copy(alpha = 0.14f),
                                 onBg.copy(alpha = 0.02f),
-                                onBg.copy(alpha = 0.00f),
+                                onBg.copy(alpha = 0f)
                             ),
                             center = c,
                             radius = pulseR * 1.25f
@@ -152,8 +165,9 @@ fun SplashScreen(onFinish: () -> Unit) {
                         center = c,
                         style = Stroke(width = 2f)
                     )
+
                     drawCircle(
-                        color = onBg.copy(alpha = 0.06f),
+                        color = onBg.copy(alpha = 0.05f),
                         radius = baseR * 1.50f,
                         center = c,
                         style = Stroke(width = 2f)
@@ -161,33 +175,30 @@ fun SplashScreen(onFinish: () -> Unit) {
 
                     val dots = 10
                     val orbitR = baseR * 1.40f
+
                     repeat(dots) { i ->
                         val ang = phase + (i * (2f * PI / dots).toFloat())
                         val x = c.x + cos(ang) * orbitR
                         val y = c.y + sin(ang * 1.2f) * (orbitR * 0.35f)
 
-                        val a = 0.05f + (0.06f * (0.5f + 0.5f * sin(ang)))
-                        val r = 3.5f + (2.5f * (0.5f + 0.5f * cos(ang)))
+                        val alpha = 0.05f + (0.06f * (0.5f + 0.5f * sin(ang)))
+                        val radius = 3.5f + (2.5f * (0.5f + 0.5f * cos(ang)))
 
                         drawCircle(
-                            color = onBg.copy(alpha = a),
-                            radius = r,
+                            color = onBg.copy(alpha = alpha),
+                            radius = radius,
                             center = Offset(x, y)
                         )
                     }
                 }
             }
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                     painter = painterResource(R.drawable.logo),
                     contentDescription = "Breez Logo",
                     modifier = Modifier
-                        .size(185.dp)
+                        .size(180.dp)
                         .graphicsLayer {
                             translationY = with(density) { floatY.dp.toPx() }
                             scaleX = logoScale.value

@@ -5,7 +5,7 @@ import com.example.breez.BuildConfig
 import com.example.breez.data.dto.CurrentWeatherDto
 import com.example.breez.data.dto.ForecastResponseDto
 import com.example.breez.data.dto.GeocodingDto
-import com.example.breez.data.network.NetworkUtils
+//import com.example.breez.data.network.NetworkUtils
 import com.example.breez.data.util.ApiResult
 import retrofit2.HttpException
 import java.io.IOException
@@ -17,9 +17,9 @@ class WeatherRemoteDataSource(
     private val weatherApiKey = BuildConfig.OPEN_WEATHER_API_KEY
 
     suspend fun fetchCurrentWeather(lat: Double, lon: Double): ApiResult<CurrentWeatherDto> {
-        if (!NetworkUtils.isInternetAvailable(context)) {
-            return ApiResult.Error("No internet connection")
-        }
+//        if (!NetworkUtils.isInternetAvailable(context)) {
+//            return ApiResult.Error("No internet connection")
+//        }
 
         return try {
             val response = apiService.getCurrentWeather(
@@ -41,9 +41,9 @@ class WeatherRemoteDataSource(
     }
 
     suspend fun fetchForecast(lat: Double, lon: Double): ApiResult<ForecastResponseDto> {
-        if (!NetworkUtils.isInternetAvailable(context)) {
-            return ApiResult.Error("No internet connection")
-        }
+//        if (!NetworkUtils.isInternetAvailable(context)) {
+//            return ApiResult.Error("No internet connection")
+//        }
         return try {
             val response = apiService.getForecast(
                 lat = lat,
@@ -66,9 +66,9 @@ class WeatherRemoteDataSource(
     }
 
     suspend fun fetchCoordinatesFromCityName(cityName: String): ApiResult<List<GeocodingDto>> {
-        if (!NetworkUtils.isInternetAvailable(context)) {
-            return ApiResult.Error("No internet connection")
-        }
+//        if (!NetworkUtils.isInternetAvailable(context)) {
+//            return ApiResult.Error("No internet connection")
+//        }
 
         return try {
             val response = apiService.getCoordinatesFromCityName(
@@ -92,9 +92,9 @@ class WeatherRemoteDataSource(
         lat: Double,
         lon: Double
     ): ApiResult<List<GeocodingDto>> {
-        if (!NetworkUtils.isInternetAvailable(context)) {
-            return ApiResult.Error("No internet connection")
-        }
+//        if (!NetworkUtils.isInternetAvailable(context)) {
+//            return ApiResult.Error("No internet connection")
+//        }
 
         return try {
             val response = apiService.getLocationNameFromCoordinates(
