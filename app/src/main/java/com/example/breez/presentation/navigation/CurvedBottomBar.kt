@@ -43,9 +43,10 @@ import androidx.compose.material.icons.outlined.Settings
 @Composable
 fun BreezCurvedBottomBar(
     onHomeClick: () -> Unit,
-    onCenterClick: () -> Unit,
+    onAlarmClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onMenuClick: () -> Unit,
+    onCenterClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -83,7 +84,7 @@ fun BreezCurvedBottomBar(
             BottomBarIcon(
                 icon = Icons.Outlined.AddAlert,
                 contentDescription = "Alarm",
-                onClick = onCenterClick,
+                onClick = onAlarmClick,
                 modifier = Modifier.weight(1f)
             )
 
