@@ -1,6 +1,5 @@
 package com.example.breez.di
 
-import android.content.Context
 import com.example.breez.data.datasource.remote.WeatherApiService
 import com.example.breez.data.datasource.remote.WeatherRemoteDataSource
 import com.example.breez.data.repository.WeatherRepository
@@ -8,12 +7,10 @@ import com.example.breez.data.repository.WeatherRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,17 +36,16 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideWeatherRemoteDataSource(
-        @ApplicationContext context: Context,
         apiService: WeatherApiService
     ): WeatherRemoteDataSource {
-        return WeatherRemoteDataSource(context, apiService)
+        return WeatherRemoteDataSource(apiService)
     }
 
     @Provides
     @Singleton
-    fun provideWeatherRepository(remoteDataSource: WeatherRemoteDataSource): WeatherRepository {
+    fun provideWeatherRepository(
+        remoteDataSource: WeatherRemoteDataSource
+    ): WeatherRepository {
         return WeatherRepositoryImpl(remoteDataSource)
     }
-
-
 }
