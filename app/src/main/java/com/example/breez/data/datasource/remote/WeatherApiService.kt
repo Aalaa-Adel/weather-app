@@ -29,7 +29,7 @@ interface WeatherApiService {
     @GET("geo/1.0/direct")
     suspend fun getCoordinatesFromCityName(
         @Query("q") cityName: String,
-        @Query("limit") limit: Int = 1,
+        @Query("limit") limit: Int = 7,
         @Query("appid") apiKey: String
     ): List<GeocodingDto>
 
@@ -37,7 +37,7 @@ interface WeatherApiService {
     suspend fun getLocationNameFromCoordinates(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("limit") limit: Int = 1,
+        @Query("limit") limit: Int = 5,
         @Query("appid") apiKey: String
     ): List<GeocodingDto>
 }
