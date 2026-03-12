@@ -1,6 +1,5 @@
 package com.example.breez.data.datasource.remote
 
-import android.content.Context
 import com.example.breez.BuildConfig
 import com.example.breez.data.dto.CurrentWeatherDto
 import com.example.breez.data.dto.ForecastResponseDto
@@ -8,19 +7,25 @@ import com.example.breez.data.dto.GeocodingDto
 import com.example.breez.data.util.ApiResult
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class WeatherRemoteDataSource(
-    private val context: Context,
+class WeatherRemoteDataSource @Inject constructor(
     private val apiService: WeatherApiService
 ) {
     private val weatherApiKey = BuildConfig.OPEN_WEATHER_API_KEY
 
-    suspend fun fetchCurrentWeather(lat: Double, lon: Double): ApiResult<CurrentWeatherDto> {
-
+    suspend fun fetchCurrentWeather(
+        lat: Double,
+        lon: Double,
+        units: String,
+        lang: String
+    ): ApiResult<CurrentWeatherDto> {
         return try {
             val response = apiService.getCurrentWeather(
                 lat = lat,
                 lon = lon,
+                units = units,
+                lang = lang,
                 apiKey = weatherApiKey
             )
             ApiResult.Success(response)
@@ -36,13 +41,18 @@ class WeatherRemoteDataSource(
         }
     }
 
-    suspend fun fetchForecast(lat: Double, lon: Double): ApiResult<ForecastResponseDto> {
+    suspend fun fetchForecast(
+        lat: Double,
+        lon: Double,
+        units: String,
+        lang: String
+    ): ApiResult<ForecastResponseDto> {
         return try {
             val response = apiService.getForecast(
                 lat = lat,
                 lon = lon,
-                lang = "ar",
-                units = "metric",
+                lang = lang,
+                units = units,
                 apiKey = weatherApiKey
             )
             ApiResult.Success(response)
@@ -59,7 +69,6 @@ class WeatherRemoteDataSource(
     }
 
     suspend fun fetchCoordinatesFromCityName(cityName: String): ApiResult<List<GeocodingDto>> {
-
         return try {
             val response = apiService.getCoordinatesFromCityName(
                 cityName = cityName,
