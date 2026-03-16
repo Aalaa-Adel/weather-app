@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Breez</string>
+    <string name="loading_message">Loading weather...</string>
+    <string name="error_message">Something went wrong</string>
+    <string name="temperature_unit">Temperature Unit</string>
+    <string name="wind_speed_unit">Wind Speed Unit</string>
 </resources>

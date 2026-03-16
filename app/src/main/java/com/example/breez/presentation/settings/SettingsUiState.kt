@@ -6,12 +6,14 @@ import com.example.breez.data.datasource.preferences.TemperatureUnit
 import com.example.breez.data.datasource.preferences.ThemeMode
 import com.example.breez.data.datasource.preferences.WindSpeedUnit
 
-
 data class SettingsUiState(
     val temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
     val locationSource: LocationSource = LocationSource.GPS,
     val language: AppLanguage = AppLanguage.ARABIC,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
-    val windSpeedUnit: WindSpeedUnit = WindSpeedUnit.METERS_PER_SECOND
-
+    val windSpeedUnit: WindSpeedUnit = WindSpeedUnit.METERS_PER_SECOND,
+    val hasHomeLocation: Boolean = false,
+    val showMapConfirmDialog: Boolean = false,
+    val showGpsConfirmDialog: Boolean = false,
+    val showLocationDisabledDialog: Boolean = false
 )

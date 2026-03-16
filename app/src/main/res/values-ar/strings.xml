@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="loading_message">جارِ تحميل الطقس...</string>
+    <string name="error_message">حدث خطأ ما</string>
+    <string name="temperature_unit">وحدة الحرارة</string>
+    <string name="wind_speed_unit">وحدة سرعة الرياح</string>
+</resources>
