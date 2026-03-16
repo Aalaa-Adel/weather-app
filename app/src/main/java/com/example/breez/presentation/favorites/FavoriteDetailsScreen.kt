@@ -800,7 +800,6 @@ private fun DayDetailStat(
         modifier = modifier,
         shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.surface.copy(
-            //    alpha = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) 0.18f else 0.82f
         ),
         tonalElevation = 0.dp,
         shadowElevation = 0.dp

@@ -3,6 +3,7 @@ package com.example.breez.presentation.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,11 +15,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
@@ -49,33 +52,28 @@ fun softOverlayColor(): Color {
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
-    cornerRadius: androidx.compose.ui.unit.Dp = 28.dp,
+    cornerRadius: Dp = 28.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(cornerRadius),
-        color = glassSurfaceColor(),
-        tonalElevation = 0.dp,
-        shadowElevation = 2.dp
-    ) {
-        Column(
-            modifier = Modifier.border(
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(cornerRadius))
+            .background(glassSurfaceColor())
+            .border(
                 width = 1.5.dp,
                 color = glassBorderColor(),
                 shape = RoundedCornerShape(cornerRadius)
             ),
-            content = content
-        )
-    }
+        content = content
+    )
 }
 
 @Composable
 fun GlassIconButton(
     onClick: () -> Unit = {},
     icon: @Composable () -> Unit,
-    size: androidx.compose.ui.unit.Dp = 52.dp,
-    cornerRadius: androidx.compose.ui.unit.Dp = 20.dp
+    size: Dp = 52.dp,
+    cornerRadius: Dp = 20.dp
 ) {
     Surface(
         onClick = onClick,
@@ -121,7 +119,7 @@ fun EnhancedFAB(
         tonalElevation = 0.dp,
         shadowElevation = 12.dp,
         modifier = Modifier
-            .size(64.dp)
+            .size(54.dp)
             .graphicsLayer {
                 scaleX = scale.value
                 scaleY = scale.value

@@ -87,7 +87,11 @@ class LocationProvider @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    suspend fun getCurrentLocation(): Location? {
+    suspend fun getCurrentLocation(): Pair<Double, Double>? {
+        if (!hasLocationPermission() || !isLocationEnabled()) {
+            return null
+        }
+
         return try {
             val cancellationTokenSource = CancellationTokenSource()
             val currentLocation = fusedLocationClient.getCurrentLocation(
@@ -96,16 +100,27 @@ class LocationProvider @Inject constructor(
             ).await()
 
             if (currentLocation != null) {
-                return currentLocation
+                return Pair(currentLocation.latitude, currentLocation.longitude)
             }
 
-            fusedLocationClient.lastLocation.await()
+            val lastLocation = fusedLocationClient.lastLocation.await()
+            if (lastLocation != null) {
+                Pair(lastLocation.latitude, lastLocation.longitude)
+            } else {
+                null
+            }
         } catch (e: Exception) {
             try {
-                fusedLocationClient.lastLocation.await()
+                val lastLocation = fusedLocationClient.lastLocation.await()
+                if (lastLocation != null) {
+                    Pair(lastLocation.latitude, lastLocation.longitude)
+                } else {
+                    null
+                }
             } catch (e: Exception) {
                 null
             }
         }
     }
+
 }

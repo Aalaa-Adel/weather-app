@@ -30,7 +30,6 @@ import com.example.breez.presentation.location.MapboxPickLocationScreen
 import com.example.breez.presentation.settings.SettingsScreen
 import com.example.breez.presentation.settings.SettingsViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
@@ -188,21 +187,21 @@ private fun NavHostContainer(
 
         composable<AppRoute.AlertsRoute> {
             AlertsScreen(
-//                onNavigateToAddAlert = {
-//                    navController.navigate(AppRoute.AddEditAlertRoute())
-//                },
-//                onNavigateToEditAlert = { alertId ->
-//                    navController.navigate(AppRoute.AddEditAlertRoute(alertId))
-//                }
+                onNavigateToAddAlert = {
+                    navController.navigate(AppRoute.AddEditAlertRoute())
+                },
+                onNavigateToEditAlert = { alertId ->
+                    navController.navigate(AppRoute.AddEditAlertRoute(alertId))
+                }
             )
         }
 
         composable<AppRoute.AddEditAlertRoute> { entry ->
             val args = entry.toRoute<AppRoute.AddEditAlertRoute>()
             AddEditAlertScreen(
-//                alertId = args.alertId,
-//                onBackClick = { navController.popBackStack() },
-//                onAlertSaved = { navController.popBackStack() }
+                alertId = args.alertId,
+                onBackClick = { navController.popBackStack() },
+                onAlertSaved = { navController.popBackStack() }
             )
         }
 
