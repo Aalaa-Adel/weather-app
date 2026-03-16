@@ -12,6 +12,9 @@ import com.example.breez.data.db.BreezDatabase
 import com.example.breez.data.db.dao.FavoriteDao
 import com.example.breez.data.db.dao.AlertDao
 import com.example.breez.data.db.dao.WeatherCacheDao
+import com.example.breez.data.notification.AlertScheduler
+import com.example.breez.data.notification.NotificationHelper
+import com.example.breez.data.notification.WeatherAlarmManager
 import com.example.breez.data.repository.BreezRepository
 import com.example.breez.data.repository.BreezRepositoryImpl
 import com.google.gson.Gson
@@ -108,5 +111,20 @@ object NetworkModule {
     fun provideSettingsPreferencesManager(@ApplicationContext context: Context): SettingsPreferencesManager {
         return SettingsPreferencesManager(context)
     }
+
+    @Provides @Singleton
+    fun provideWeatherAlarmManager(@ApplicationContext context: Context): WeatherAlarmManager =
+        WeatherAlarmManager(context)
+
+    @Provides @Singleton
+    fun provideAlertScheduler(
+        @ApplicationContext context: Context,
+        weatherAlarmManager: WeatherAlarmManager
+    ): AlertScheduler = AlertScheduler(context, weatherAlarmManager)
+
+
+    @Provides @Singleton
+    fun provideNotificationHelper(@ApplicationContext context: Context): NotificationHelper =
+        NotificationHelper(context)
 
 }

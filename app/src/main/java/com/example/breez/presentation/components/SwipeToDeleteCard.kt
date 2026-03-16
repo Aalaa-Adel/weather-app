@@ -51,7 +51,7 @@ fun SwipeToDeleteCard(
         ) {
             Surface(
                 modifier = Modifier
-                    .width(100.dp)
+                    .width(200.dp)
                     .height(90.dp),
                 shape = RoundedCornerShape(24.dp),
                 color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.9f)

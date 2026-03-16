@@ -18,7 +18,9 @@ data class AlertEntity(
     val cityName: String? = null,
     val useCurrentLocation: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
-)
+){
+    fun isOneTime(): Boolean = startTime.time == endTime.time
+}
 
 enum class AlertType {
     NOTIFICATION,

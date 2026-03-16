@@ -105,8 +105,8 @@ fun FavoritesScreen(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(24.dp)
-                    .padding(bottom = 90.dp)
+                    .padding(20.dp)
+                    .padding(bottom = 120.dp)
             ) {
                 EnhancedFAB(
                     onClick = onNavigateToAddFavorite,
@@ -118,12 +118,12 @@ fun FavoritesScreen(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(20.dp)
-                    .padding(bottom = 90.dp)
+                    .padding(bottom = 70.dp)
             ) {
                 SnackbarHost(
                     hostState = snackbarHostState,
                     snackbar = { snackbarData ->
-                        EnhancedSnackbar(snackbarData = snackbarData)
+                        CompactSnackbar(snackbarData = snackbarData)
                     }
                 )
             }
@@ -170,75 +170,63 @@ private fun EmptyFavoritesContent(
     onAddFavorite: () -> Unit
 ) {
     Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 120.dp),
+        contentAlignment = Alignment.Center,
     ) {
         GlassCard(
-            modifier = Modifier.fillMaxWidth(),
-            cornerRadius = 32.dp
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            cornerRadius = 24.dp
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(40.dp),
+                    .padding(32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    softOverlayColor(),
-                                    softOverlayColor().copy(alpha = 0.4f),
-                                    androidx.compose.ui.graphics.Color.Transparent
-                                )
-                            )
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Outlined.FavoriteBorder,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(48.dp)
-                    )
-                }
+                Icon(
+                    Icons.Outlined.FavoriteBorder,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(56.dp)
+                )
 
                 Text(
                     text = "No favorites yet",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.ExtraBold,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Text(
-                    text = "Add locations to quickly access their weather forecasts and stay updated with your favorite places.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
+                    text = "Add locations to quickly access their weather",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Button(
                     onClick = onAddFavorite,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp),
-                    shape = RoundedCornerShape(24.dp)
+                        .height(48.dp),
+                    shape = RoundedCornerShape(16.dp)
                 ) {
                     Icon(
                         Icons.Outlined.Map,
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(20.dp)
                     )
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        "Add your first location",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        "Add location",
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
             }
@@ -412,25 +400,25 @@ private fun FavoriteCardContent(favorite: FavoriteEntity) {
 @Composable
 private fun EnhancedSnackbar(snackbarData: SnackbarData) {
     Surface(
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(12.dp),
         color = glassSurfaceColor(),
         tonalElevation = 0.dp,
-        shadowElevation = 12.dp
+        shadowElevation = 8.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(
-                    1.5.dp,
+                    1.dp,
                     glassBorderColor(),
-                    RoundedCornerShape(20.dp)
+                    RoundedCornerShape(12.dp)
                 )
-                .padding(20.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = snackbarData.visuals.message,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.weight(1f)
@@ -438,13 +426,58 @@ private fun EnhancedSnackbar(snackbarData: SnackbarData) {
 
             snackbarData.visuals.actionLabel?.let { actionLabel ->
                 TextButton(
-                    onClick = { snackbarData.performAction() }
+                    onClick = { snackbarData.performAction() },
+                    modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
                         text = actionLabel,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CompactSnackbar(snackbarData: SnackbarData) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = glassSurfaceColor(),
+        tonalElevation = 0.dp,
+        shadowElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    1.dp,
+                    glassBorderColor(),
+                    RoundedCornerShape(12.dp)
+                )
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = snackbarData.visuals.message,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.weight(1f)
+            )
+
+            snackbarData.visuals.actionLabel?.let { actionLabel ->
+                TextButton(
+                    onClick = { snackbarData.performAction() },
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Text(
+                        text = actionLabel,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
             }

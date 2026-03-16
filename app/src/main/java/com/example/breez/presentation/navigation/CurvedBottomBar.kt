@@ -53,7 +53,7 @@ fun BreezCurvedBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(horizontal = 10.dp, vertical = 8.dp),
+            .padding(horizontal = 10.dp, vertical = 6.dp),
         contentAlignment = Alignment.BottomCenter
     ) {
         CurvedBottomBarBackground()
@@ -61,7 +61,7 @@ fun BreezCurvedBottomBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(78.dp)
+                .height(68.dp)
                 .padding(horizontal = 18.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -110,39 +110,39 @@ private fun CurvedBottomBarBackground() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(92.dp)
+            .height(80.dp)
     ) {
-        Canvas(modifier = Modifier.fillMaxWidth().height(92.dp)) {
+        Canvas(modifier = Modifier.fillMaxWidth().height(80.dp)) {
             val width = size.width
             val height = size.height
 
             val path = Path().apply {
-                moveTo(0f, 28f)
+                moveTo(0f, 20f)
 
                 quadraticBezierTo(
                     width * 0.10f, 0f,
-                    width * 0.22f, 18f
+                    width * 0.22f, 12f
                 )
 
-                lineTo(width * 0.36f, 18f)
+                lineTo(width * 0.36f, 12f)
 
                 cubicTo(
-                    width * 0.42f, 18f,
-                    width * 0.42f, 70f,
-                    width * 0.50f, 70f
+                    width * 0.42f, 12f,
+                    width * 0.42f, 60f,
+                    width * 0.50f, 60f
                 )
 
                 cubicTo(
-                    width * 0.58f, 70f,
-                    width * 0.58f, 18f,
-                    width * 0.64f, 18f
+                    width * 0.58f, 60f,
+                    width * 0.58f, 12f,
+                    width * 0.64f, 12f
                 )
 
-                lineTo(width * 0.78f, 18f)
+                lineTo(width * 0.78f, 12f)
 
                 quadraticBezierTo(
                     width * 0.90f, 0f,
-                    width, 28f
+                    width, 20f
                 )
 
                 lineTo(width, height)
