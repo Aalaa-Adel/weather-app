@@ -1,6 +1,8 @@
 package com.example.breez.presentation.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -45,13 +47,14 @@ import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material.icons.outlined.WbCloudy
 import androidx.compose.material.icons.rounded.Air
 import androidx.compose.material.icons.rounded.Speed
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -72,6 +75,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -79,7 +83,7 @@ import com.example.breez.WeatherScreenBackground
 import com.example.breez.data.datasource.preferences.TemperatureUnit
 import com.example.breez.data.datasource.preferences.WindSpeedUnit
 import com.example.breez.data.dto.ForecastItemDto
-import com.example.breez.presentation.navigation.BreezCurvedBottomBar
+import com.example.breez.data.datasource.preferences.LocationSource
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -92,33 +96,58 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val isConnected by viewModel.isConnected.collectAsStateWithLifecycle()
 
+    val context = LocalContext.current
+
     WeatherScreenBackground {
         Box(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            if (!isConnected) {
-                ErrorContent(
-                    message = "No internet connection",
-                    onRetry = viewModel::refresh
-                )
-            } else {
-                when {
-                    uiState.isLoading -> {
-                        LoadingContent()
-                    }
+            when (val state = uiState) {
+                is HomeUiState.Loading -> {
+                    LoadingContent()
+                }
 
-                    uiState.error != null -> {
+                is HomeUiState.Error -> {
+                    if (state.currentWeather != null && state.forecast != null) {
+                        HomeContent(
+                            currentWeather = state.currentWeather,
+                            forecast = state.forecast,
+                            temperatureUnit = state.temperatureUnit,
+                            windSpeedUnit = state.windSpeedUnit,
+                            locationSource = state.locationSource,
+                            isRefreshing = false,
+                            isConnected = isConnected,
+                            onRefresh = viewModel::refresh
+                        )
+                    } else {
                         ErrorContent(
-                            message = uiState.error ?: "Unknown error",
+                            message = state.message,
                             onRetry = viewModel::refresh
                         )
                     }
+                }
 
-                    uiState.currentWeather != null && uiState.forecast != null -> {
-                        HomeContent(
-                            uiState = uiState,
-                            onRefresh = viewModel::refresh
+                is HomeUiState.Success -> {
+                    HomeContent(
+                        currentWeather = state.currentWeather,
+                        forecast = state.forecast,
+                        temperatureUnit = state.temperatureUnit,
+                        windSpeedUnit = state.windSpeedUnit,
+                        locationSource = state.locationSource,
+                        isRefreshing = state.isRefreshing,
+                        isConnected = isConnected,
+                        onRefresh = viewModel::refresh
+                    )
+
+                    if (state.showLocationSettingsDialog) {
+                        LocationSettingsDialog(
+                            onDismiss = { viewModel.dismissLocationDialog() },
+                            onOpenSettings = {
+                                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                                context.startActivity(intent)
+                                viewModel.dismissLocationDialog()
+                            }
                         )
                     }
                 }
@@ -233,13 +262,16 @@ private fun ErrorContent(
 
 @Composable
 private fun HomeContent(
-    uiState: HomeUiState,
+    currentWeather: com.example.breez.data.dto.CurrentWeatherDto,
+    forecast: com.example.breez.data.dto.ForecastResponseDto,
+    temperatureUnit: TemperatureUnit,
+    windSpeedUnit: WindSpeedUnit,
+    locationSource: LocationSource,
+    isRefreshing: Boolean,
+    isConnected: Boolean,
     bottomPadding: PaddingValues = PaddingValues(),
     onRefresh: () -> Unit
 ) {
-    val currentWeather = uiState.currentWeather!!
-    val forecast = uiState.forecast!!
-
     val next24HoursItems = rememberNext24HoursItems(forecast.list)
 
     val dailyItems = rememberDailyItems(
@@ -249,72 +281,118 @@ private fun HomeContent(
 
     val selectedDayIndex = rememberSaveable { mutableIntStateOf(0) }
 
-    LazyColumn(
+    Box(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = bottomPadding.calculateBottomPadding()),
+            verticalArrangement = Arrangement.spacedBy(18.dp)
+        ) {
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+
+            item {
+                HomeTopBar(
+                    cityName = currentWeather.name,
+                    onRefresh = onRefresh
+                )
+            }
+
+            item {
+                CurrentWeatherHero(
+                    temperature = currentWeather.main.temp,
+                    description = currentWeather.weather.firstOrNull()?.description.orEmpty(),
+                    iconCode = currentWeather.weather.firstOrNull()?.icon.orEmpty(),
+                    dateTimeText = formatDateTime(currentWeather.dt, currentWeather.timezone),
+                    temperatureUnit = temperatureUnit
+                )
+            }
+
+            item {
+                WeatherStatsCard(
+                    humidity = currentWeather.main.humidity,
+                    windSpeed = currentWeather.wind.speed,
+                    pressure = currentWeather.main.pressure,
+                    clouds = currentWeather.clouds.all,
+                    windSpeedUnit = windSpeedUnit
+                )
+            }
+
+            item {
+                SectionTitle(title = "Next 24 Hours")
+            }
+
+            item {
+                HourlyForecastSection(
+                    hourlyItems = next24HoursItems,
+                    temperatureUnit = temperatureUnit
+                )
+            }
+
+            item {
+                SectionTitle(title = "5-Day Forecast")
+            }
+
+            item {
+                DailyForecastSection(
+                    dailyItems = dailyItems,
+                    selectedIndex = selectedDayIndex.intValue,
+                    onDayClick = { clickedIndex ->
+                        selectedDayIndex.intValue =
+                            if (selectedDayIndex.intValue == clickedIndex) -1 else clickedIndex
+                    },
+                    windSpeedUnit = windSpeedUnit,
+                    temperatureUnit = temperatureUnit
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(120.dp)) }
+        }
+
+        AnimatedVisibility(
+            visible = !isConnected,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .statusBarsPadding()
+                .padding(top = 8.dp)
+        ) {
+            OfflineBanner()
+        }
+    }
+}
+
+@Composable
+private fun OfflineBanner() {
+    Surface(
         modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .padding(horizontal = 20.dp)
-            .padding(bottom = bottomPadding.calculateBottomPadding()),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = Color(0xFF1E1E1E).copy(alpha = 0.95f),
+        tonalElevation = 4.dp
     ) {
-        item { Spacer(modifier = Modifier.height(8.dp)) }
-
-        item {
-            HomeTopBar(
-                cityName = currentWeather.name,
-                onRefresh = onRefresh
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Cloud,
+                contentDescription = "Offline",
+                tint = Color.White.copy(alpha = 0.9f),
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "no internet connection",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.9f),
+                fontWeight = FontWeight.Medium
             )
         }
-
-        item {
-            CurrentWeatherHero(
-                temperature = currentWeather.main.temp,
-                description = currentWeather.weather.firstOrNull()?.description.orEmpty(),
-                iconCode = currentWeather.weather.firstOrNull()?.icon.orEmpty(),
-                dateTimeText = formatDateTime(currentWeather.dt, currentWeather.timezone),
-                temperatureUnit = uiState.temperatureUnit
-            )
-        }
-
-        item {
-            WeatherStatsCard(
-                humidity = currentWeather.main.humidity,
-                windSpeed = currentWeather.wind.speed,
-                pressure = currentWeather.main.pressure,
-                clouds = currentWeather.clouds.all,
-                windSpeedUnit = uiState.windSpeedUnit
-            )
-        }
-
-        item {
-            SectionTitle(title = "Next 24 Hours")
-        }
-
-        item {
-            HourlyForecastSection(
-                hourlyItems = next24HoursItems,
-                temperatureUnit = uiState.temperatureUnit
-            )
-        }
-
-        item {
-            SectionTitle(title = "5-Day Forecast")
-        }
-
-        item {
-            DailyForecastSection(
-                dailyItems = dailyItems,
-                selectedIndex = selectedDayIndex.intValue,
-                onDayClick = { clickedIndex ->
-                    selectedDayIndex.intValue =
-                        if (selectedDayIndex.intValue == clickedIndex) -1 else clickedIndex
-                },
-                windSpeedUnit = uiState.windSpeedUnit,
-                temperatureUnit = uiState.temperatureUnit
-            )
-        }
-
-        item { Spacer(modifier = Modifier.height(120.dp)) }
     }
 }
 
@@ -1190,3 +1268,44 @@ data class DailyWeatherUiModel(
     val avgWindSpeed: Double,
     val avgClouds: Int
 )
+
+
+@Composable
+private fun LocationSettingsDialog(
+    onDismiss: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                imageVector = Icons.Outlined.GridView,
+                contentDescription = "Location",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        title = {
+            Text(
+                text = "Location Services Disabled",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Text(
+                text = "Location services are disabled. Please enable location to get weather for your current location.",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onOpenSettings) {
+                Text("Open Settings")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}

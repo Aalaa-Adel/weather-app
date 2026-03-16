@@ -95,7 +95,9 @@ data class AppSettings(
     val locationSource: LocationSource = LocationSource.GPS,
     val language: AppLanguage = AppLanguage.ARABIC,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
-    val windSpeedUnit: WindSpeedUnit = WindSpeedUnit.METERS_PER_SECOND
+    val windSpeedUnit: WindSpeedUnit = WindSpeedUnit.METERS_PER_SECOND,
+    val homeLat: Float? = null,
+    val homeLon: Float? = null
 )
 
 @Singleton
@@ -112,13 +114,21 @@ class SettingsPreferencesManager @Inject constructor(
     fun getCurrentSettings(): AppSettings = _settingsFlow.value
 
     fun saveSettings(settings: AppSettings) {
-        sharedPreferences.edit()
+        val editor = sharedPreferences.edit()
             .putString(KEY_TEMPERATURE_UNIT, settings.temperatureUnit.storageValue)
             .putString(KEY_LOCATION_SOURCE, settings.locationSource.storageValue)
             .putString(KEY_LANGUAGE, settings.language.storageValue)
             .putString(KEY_THEME_MODE, settings.themeMode.storageValue)
             .putString(KEY_WIND_SPEED_UNIT, settings.windSpeedUnit.storageValue)
-            .apply()
+
+        if (settings.homeLat != null && settings.homeLon != null) {
+            editor.putFloat(KEY_HOME_LAT, settings.homeLat)
+                .putFloat(KEY_HOME_LON, settings.homeLon)
+        } else {
+            editor.remove(KEY_HOME_LAT).remove(KEY_HOME_LON)
+        }
+
+        editor.apply()
 
         _settingsFlow.value = settings
     }
@@ -127,8 +137,7 @@ class SettingsPreferencesManager @Inject constructor(
         return AppSettings(
             temperatureUnit = TemperatureUnit.fromStorage(
                 sharedPreferences.getString(
-                    KEY_TEMPERATURE_UNIT,
-                    TemperatureUnit.CELSIUS.storageValue
+                    KEY_TEMPERATURE_UNIT, TemperatureUnit.CELSIUS.storageValue
                 )
             ),
             locationSource = LocationSource.fromStorage(
@@ -145,7 +154,9 @@ class SettingsPreferencesManager @Inject constructor(
                     KEY_WIND_SPEED_UNIT,
                     WindSpeedUnit.METERS_PER_SECOND.storageValue
                 ),
-            )
+            ),
+            homeLat = if (sharedPreferences.contains(KEY_HOME_LAT)) sharedPreferences.getFloat(KEY_HOME_LAT, 0f) else null,
+            homeLon = if (sharedPreferences.contains(KEY_HOME_LON)) sharedPreferences.getFloat(KEY_HOME_LON, 0f) else null
         )
     }
 
@@ -157,6 +168,8 @@ class SettingsPreferencesManager @Inject constructor(
         private const val KEY_LANGUAGE = "language"
         private const val KEY_THEME_MODE = "theme_mode"
         private const val KEY_WIND_SPEED_UNIT = "wind_speed_unit"
+        private const val KEY_HOME_LAT = "home_lat"
+        private const val KEY_HOME_LON = "home_lon"
 
     }
 }

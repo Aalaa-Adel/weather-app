@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.Thermostat
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -36,6 +37,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,10 +47,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import android.content.Intent
+import android.provider.Settings
 import com.example.breez.WeatherScreenBackground
 import com.example.breez.data.datasource.preferences.AppLanguage
 import com.example.breez.data.datasource.preferences.LocationSource
@@ -60,9 +65,11 @@ import com.example.breez.data.datasource.preferences.WindSpeedUnit
 fun SettingsScreen(
     onBackClick: () -> Unit = {},
     bottomPadding: PaddingValues = PaddingValues(),
+    onNavigateToPickLocation: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     val selectedTemperatureState = remember(uiState.temperatureUnit) {
         mutableStateOf(uiState.temperatureUnit)
@@ -79,174 +86,225 @@ fun SettingsScreen(
     val selectedWindSpeedState = remember(uiState.windSpeedUnit) {
         mutableStateOf(uiState.windSpeedUnit)
     }
-    WeatherScreenBackground {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-                .padding(bottom = bottomPadding.calculateBottomPadding())  ,
-                    verticalArrangement = Arrangement.spacedBy(18.dp)
+
+    // Auto-save when any setting changes
+    LaunchedEffect(
+        selectedTemperatureState.value,
+        selectedLocationState.value,
+        selectedLanguageState.value,
+        selectedThemeState.value,
+        selectedWindSpeedState.value
+    ) {
+        // Skip initial save on first composition
+        if (selectedTemperatureState.value != uiState.temperatureUnit ||
+            selectedLocationState.value != uiState.locationSource ||
+            selectedLanguageState.value != uiState.language ||
+            selectedThemeState.value != uiState.themeMode ||
+            selectedWindSpeedState.value != uiState.windSpeedUnit
         ) {
-            SettingsTopBar(
-                onBackClick = onBackClick
+            viewModel.saveSettings(
+                temperatureUnit = selectedTemperatureState.value,
+                locationSource = selectedLocationState.value,
+                language = selectedLanguageState.value,
+                themeMode = selectedThemeState.value,
+                windSpeedUnit = selectedWindSpeedState.value
             )
+        }
+    }
 
-            SettingsHeroCard()
-
-            SettingsSectionCard(
-                title = "Temperature Unit",
-                subtitle = "Choose how temperature is displayed",
-                icon = Icons.Outlined.Thermostat
-            ) {
-                SettingsRadioItem(
-                    title = "Celsius",
-                    subtitle = "Best for metric weather data",
-                    selected = selectedTemperatureState.value == TemperatureUnit.CELSIUS,
-                    onClick = { selectedTemperatureState.value = TemperatureUnit.CELSIUS }
-                )
-
-                SettingsRadioItem(
-                    title = "Fahrenheit",
-                    subtitle = "Common for US-style weather display",
-                    selected = selectedTemperatureState.value == TemperatureUnit.FAHRENHEIT,
-                    onClick = { selectedTemperatureState.value = TemperatureUnit.FAHRENHEIT }
-                )
-
-                SettingsRadioItem(
-                    title = "Kelvin",
-                    subtitle = "Raw scientific temperature unit",
-                    selected = selectedTemperatureState.value == TemperatureUnit.KELVIN,
-                    onClick = { selectedTemperatureState.value = TemperatureUnit.KELVIN }
-                )
-            }
-
-            SettingsSectionCard(
-                title = "Location Source",
-                subtitle = "Choose how the app gets your location",
-                icon = Icons.Outlined.MyLocation
-            ) {
-                SettingsRadioItem(
-                    title = "GPS",
-                    subtitle = "Use your live device location",
-                    selected = selectedLocationState.value == LocationSource.GPS,
-                    onClick = { selectedLocationState.value = LocationSource.GPS }
-                )
-
-                SettingsRadioItem(
-                    title = "Map",
-                    subtitle = "Pick a location manually",
-                    selected = selectedLocationState.value == LocationSource.MAP,
-                    onClick = { selectedLocationState.value = LocationSource.MAP }
-                )
-            }
-
-            SettingsSectionCard(
-                title = "Language",
-                subtitle = "Choose the app language",
-                icon = Icons.Outlined.Language
-            ) {
-                SettingsRadioItem(
-                    title = "Arabic",
-                    subtitle = "واجهة عربية",
-                    selected = selectedLanguageState.value == AppLanguage.ARABIC,
-                    onClick = { selectedLanguageState.value = AppLanguage.ARABIC }
-                )
-
-                SettingsRadioItem(
-                    title = "English",
-                    subtitle = "English interface",
-                    selected = selectedLanguageState.value == AppLanguage.ENGLISH,
-                    onClick = { selectedLanguageState.value = AppLanguage.ENGLISH }
-                )
-            }
-
-            SettingsSectionCard(
-                title = "Theme Mode",
-                subtitle = "Control the app appearance",
-                icon = Icons.Outlined.DarkMode
-            ) {
-                SettingsRadioItem(
-                    title = "System Default",
-                    subtitle = "Follow device appearance",
-                    selected = selectedThemeState.value == ThemeMode.SYSTEM,
-                    onClick = { selectedThemeState.value = ThemeMode.SYSTEM }
-                )
-
-                SettingsRadioItem(
-                    title = "Light",
-                    subtitle = "Bright and clean look",
-                    selected = selectedThemeState.value == ThemeMode.LIGHT,
-                    onClick = { selectedThemeState.value = ThemeMode.LIGHT }
-                )
-
-                SettingsRadioItem(
-                    title = "Dark",
-                    subtitle = "Deeper low-light style",
-                    selected = selectedThemeState.value == ThemeMode.DARK,
-                    onClick = { selectedThemeState.value = ThemeMode.DARK }
-                )
-            }
-
-            SettingsSectionCard(
-                title = "Wind Speed Unit",
-                subtitle = "Choose the unit for wind speed",
-                icon = Icons.Outlined.Air
-            ) {
-                SettingsRadioItem(
-                    title = "Meters/Second (m/s)",
-                    subtitle = "Metric system unit",
-                    selected = selectedWindSpeedState.value == WindSpeedUnit.METERS_PER_SECOND,
-                    onClick = { selectedWindSpeedState.value = WindSpeedUnit.METERS_PER_SECOND }
-                )
-
-                SettingsRadioItem(
-                    title = "Kilometers/Hour (km/h)",
-                    subtitle = "Common in most countries",
-                    selected = selectedWindSpeedState.value == WindSpeedUnit.KILOMETERS_PER_HOUR,
-                    onClick = { selectedWindSpeedState.value = WindSpeedUnit.KILOMETERS_PER_HOUR }
-                )
-
-                SettingsRadioItem(
-                    title = "Miles/Hour (mph)",
-                    subtitle = "Common for U.S. system",
-                    selected = selectedWindSpeedState.value == WindSpeedUnit.MILES_PER_HOUR,
-                    onClick = { selectedWindSpeedState.value = WindSpeedUnit.MILES_PER_HOUR }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Button(
-                onClick = {
-                    viewModel.saveSettings(
-                        temperatureUnit = selectedTemperatureState.value,
-                        locationSource = selectedLocationState.value,
-                        language = selectedLanguageState.value,
-                        themeMode = selectedThemeState.value,
-                        windSpeedUnit = selectedWindSpeedState.value
-                    )
-                    onBackClick()
-                },
+    WeatherScreenBackground {
+        Box(modifier = Modifier.fillMaxSize()) {
+            // Scrollable content
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
+                    .padding(bottom = 80.dp + bottomPadding.calculateBottomPadding()),
+                verticalArrangement = Arrangement.spacedBy(18.dp)
             ) {
-                Text(
-                    text = "Save Settings",
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold
+                SettingsTopBar(
+                    onBackClick = onBackClick
                 )
-            }
 
-            Spacer(modifier = Modifier.height(8.dp))
+                SettingsHeroCard()
+
+                SettingsSectionCard(
+                    title = "Temperature Unit",
+                    subtitle = "Choose how temperature is displayed",
+                    icon = Icons.Outlined.Thermostat
+                ) {
+                    SettingsRadioItem(
+                        title = "Celsius",
+                        subtitle = "Best for metric weather data",
+                        selected = selectedTemperatureState.value == TemperatureUnit.CELSIUS,
+                        onClick = { selectedTemperatureState.value = TemperatureUnit.CELSIUS }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Fahrenheit",
+                        subtitle = "Common for US-style weather display",
+                        selected = selectedTemperatureState.value == TemperatureUnit.FAHRENHEIT,
+                        onClick = { selectedTemperatureState.value = TemperatureUnit.FAHRENHEIT }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Kelvin",
+                        subtitle = "Raw scientific temperature unit",
+                        selected = selectedTemperatureState.value == TemperatureUnit.KELVIN,
+                        onClick = { selectedTemperatureState.value = TemperatureUnit.KELVIN }
+                    )
+                }
+
+                SettingsSectionCard(
+                    title = "Location Source",
+                    subtitle = "Choose how the app gets your location",
+                    icon = Icons.Outlined.MyLocation
+                ) {
+                    SettingsRadioItem(
+                        title = "GPS",
+                        subtitle = "Use your live device location",
+                        selected = selectedLocationState.value == LocationSource.GPS,
+                        onClick = {
+                            viewModel.showGpsConfirmDialog()
+                        }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Map",
+                        subtitle = "Pick a location manually",
+                        selected = selectedLocationState.value == LocationSource.MAP,
+                        onClick = {
+                            viewModel.showMapConfirmDialog()
+                        }
+                    )
+
+                    androidx.compose.animation.AnimatedVisibility(visible = selectedLocationState.value == LocationSource.MAP) {
+                        androidx.compose.foundation.layout.Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = onNavigateToPickLocation) {
+                                Text(
+                                    text = "Pick Home Location",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    }
+                }
+
+                SettingsSectionCard(
+                    title = "Language",
+                    subtitle = "Choose the app language",
+                    icon = Icons.Outlined.Language
+                ) {
+                    SettingsRadioItem(
+                        title = "Arabic",
+                        subtitle = "واجهة عربية",
+                        selected = selectedLanguageState.value == AppLanguage.ARABIC,
+                        onClick = { selectedLanguageState.value = AppLanguage.ARABIC }
+                    )
+
+                    SettingsRadioItem(
+                        title = "English",
+                        subtitle = "English interface",
+                        selected = selectedLanguageState.value == AppLanguage.ENGLISH,
+                        onClick = { selectedLanguageState.value = AppLanguage.ENGLISH }
+                    )
+                }
+
+                SettingsSectionCard(
+                    title = "Theme Mode",
+                    subtitle = "Control the app appearance",
+                    icon = Icons.Outlined.DarkMode
+                ) {
+                    SettingsRadioItem(
+                        title = "System Default",
+                        subtitle = "Follow device appearance",
+                        selected = selectedThemeState.value == ThemeMode.SYSTEM,
+                        onClick = { selectedThemeState.value = ThemeMode.SYSTEM }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Light",
+                        subtitle = "Bright and clean look",
+                        selected = selectedThemeState.value == ThemeMode.LIGHT,
+                        onClick = { selectedThemeState.value = ThemeMode.LIGHT }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Dark",
+                        subtitle = "Deeper low-light style",
+                        selected = selectedThemeState.value == ThemeMode.DARK,
+                        onClick = { selectedThemeState.value = ThemeMode.DARK }
+                    )
+                }
+
+                SettingsSectionCard(
+                    title = "Wind Speed Unit",
+                    subtitle = "Choose the unit for wind speed",
+                    icon = Icons.Outlined.Air
+                ) {
+                    SettingsRadioItem(
+                        title = "Meters/Second (m/s)",
+                        subtitle = "Metric system unit",
+                        selected = selectedWindSpeedState.value == WindSpeedUnit.METERS_PER_SECOND,
+                        onClick = { selectedWindSpeedState.value = WindSpeedUnit.METERS_PER_SECOND }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Kilometers/Hour (km/h)",
+                        subtitle = "Common in most countries",
+                        selected = selectedWindSpeedState.value == WindSpeedUnit.KILOMETERS_PER_HOUR,
+                        onClick = { selectedWindSpeedState.value = WindSpeedUnit.KILOMETERS_PER_HOUR }
+                    )
+
+                    SettingsRadioItem(
+                        title = "Miles/Hour (mph)",
+                        subtitle = "Common for U.S. system",
+                        selected = selectedWindSpeedState.value == WindSpeedUnit.MILES_PER_HOUR,
+                        onClick = { selectedWindSpeedState.value = WindSpeedUnit.MILES_PER_HOUR }
+                    )
+                }
+            }
+        }
+
+        // Map Confirm Dialog
+        if (uiState.showMapConfirmDialog) {
+            MapConfirmDialog(
+                onDismiss = { viewModel.dismissMapConfirmDialog() },
+                onProceed = {
+                    selectedLocationState.value = LocationSource.MAP
+                    viewModel.dismissMapConfirmDialog()
+                    onNavigateToPickLocation()
+                }
+            )
+        }
+
+        // GPS Confirm Dialog
+        if (uiState.showGpsConfirmDialog) {
+            GpsConfirmDialog(
+                onDismiss = { viewModel.dismissGpsConfirmDialog() },
+                onProceed = {
+                    selectedLocationState.value = LocationSource.GPS
+                    viewModel.dismissGpsConfirmDialog()
+                }
+            )
+        }
+
+        // Location Disabled Dialog
+        if (uiState.showLocationDisabledDialog) {
+            LocationDisabledDialog(
+                onDismiss = { viewModel.dismissLocationDisabledDialog() },
+                onOpenSettings = {
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    context.startActivity(intent)
+                    viewModel.dismissLocationDisabledDialog()
+                }
+            )
         }
     }
 }
@@ -522,4 +580,157 @@ private fun settingsSoftOverlayColor(): Color {
     } else {
         MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
     }
+}
+
+@Composable
+private fun MapConfirmDialog(
+    onDismiss: () -> Unit,
+    onProceed: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.MyLocation,
+                    contentDescription = "Map",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        },
+        title = {
+            Text(
+                text = "Pick from Map?",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = "Open the interactive map to precisely select your weather location. This allows you to choose any spot worldwide.",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onProceed) {
+                Text("PROCEED", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("CANCEL")
+            }
+        }
+    )
+}
+
+@Composable
+private fun GpsConfirmDialog(
+    onDismiss: () -> Unit,
+    onProceed: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.MyLocation,
+                    contentDescription = "GPS",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        },
+        title = {
+            Text(
+                text = "Use GPS?",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = "The app will use your device's GPS to automatically detect and update your weather location. Do you want to enable this?",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onProceed) {
+                Text("PROCEED", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("CANCEL")
+            }
+        }
+    )
+}
+
+@Composable
+private fun LocationDisabledDialog(
+    onDismiss: () -> Unit,
+    onOpenSettings: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFFFF5252).copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.MyLocation,
+                    contentDescription = "Location Disabled",
+                    tint = Color(0xFFFF5252),
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        },
+        title = {
+            Text(
+                text = "Location is Disabled",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = "Please enable location services in your device settings to use GPS automatically.",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onOpenSettings) {
+                Text("Open Settings", fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("CANCEL")
+            }
+        }
+    )
 }

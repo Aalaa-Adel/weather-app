@@ -30,6 +30,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "OPEN_WEATHER_API_KEY", "\"$openWeatherApiKey\"")
+        val mapboxAccessToken = localProperties.getProperty("MAPBOX_ACCESS_TOKEN") ?: ""
+
+
+        resValue("string", "mapbox_access_token", mapboxAccessToken)
+
+        manifestPlaceholders["MAPBOX_ACCESS_TOKEN"] = mapboxAccessToken
 
     }
 
@@ -49,6 +55,7 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
 }
 
@@ -120,5 +127,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.android)
+    implementation(libs.extension.compose)
+    implementation(libs.mapbox.search.ui)
 
 }

@@ -27,11 +27,18 @@ sealed class AppRoute {
     data class FavoriteDetailsRoute(
         val lat: Double,
         val lon: Double,
-        val cityName: String = ""
+        val cityName: String = "",
+        val favoriteId: Long? = null
     ) : AppRoute()
 
     @Serializable
     data class AddEditAlertRoute(
         val alertId: Long? = null
+    ) : AppRoute()
+
+    @Serializable
+    data class PickLocationRoute(
+        val initialLat: Double? = null,
+        val initialLon: Double? = null
     ) : AppRoute()
 }
