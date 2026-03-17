@@ -87,7 +87,6 @@ fun SwipeToDeleteCard(
             }
         }
 
-        // Main card
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
