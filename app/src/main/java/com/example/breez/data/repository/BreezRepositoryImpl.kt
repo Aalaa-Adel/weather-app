@@ -1,9 +1,7 @@
 package com.example.breez.data.repository
 
-import com.example.breez.data.datasource.remote.WeatherRemoteDataSource
-import com.example.breez.data.db.dao.AlertDao
-import com.example.breez.data.db.dao.FavoriteDao
-import com.example.breez.data.db.dao.WeatherCacheDao
+import com.example.breez.data.datasource.local.LocalDataSource
+import com.example.breez.data.datasource.remote.RemoteDataSource
 import com.example.breez.data.db.entity.AlertEntity
 import com.example.breez.data.db.entity.FavoriteEntity
 import com.example.breez.data.db.entity.WeatherCacheEntity
@@ -12,17 +10,18 @@ import com.example.breez.data.dto.ForecastResponseDto
 import com.example.breez.data.dto.GeocodingDto
 import com.example.breez.data.util.ApiResult
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class BreezRepositoryImpl @Inject constructor(
-    private val remoteDataSource: WeatherRemoteDataSource,
-    private val weatherCacheDao: WeatherCacheDao,
-    private val favoriteDao: FavoriteDao,
-    private val alertDao: AlertDao,
-    private val gson: Gson
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+    private val gson: Gson,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BreezRepository {
 
     override suspend fun getCurrentWeather(
@@ -33,7 +32,7 @@ class BreezRepositoryImpl @Inject constructor(
     ): ApiResult<CurrentWeatherDto> {
         val cacheKey = "current_${lat}_${lon}_${units}_${lang}"
 
-        val cachedData = weatherCacheDao.getCache(cacheKey, System.currentTimeMillis())
+        val cachedData = localDataSource.getCache(cacheKey, System.currentTimeMillis())
 
         return try {
             val result = remoteDataSource.fetchCurrentWeather(
@@ -45,7 +44,7 @@ class BreezRepositoryImpl @Inject constructor(
 
             if (result is ApiResult.Success) {
                 val jsonData = gson.toJson(result.data)
-                weatherCacheDao.insertCache(
+                localDataSource.insertCache(
                     WeatherCacheEntity(
                         cacheKey = cacheKey,
                         jsonData = jsonData,
@@ -61,7 +60,7 @@ class BreezRepositoryImpl @Inject constructor(
             var cacheToUse = cachedData
 
             if (cacheToUse == null) {
-                cacheToUse = weatherCacheDao.getCacheIgnoreExpiry(cacheKey)
+                cacheToUse = localDataSource.getCacheIgnoreExpiry(cacheKey)
             }
 
             if (cacheToUse != null) {
@@ -86,7 +85,7 @@ class BreezRepositoryImpl @Inject constructor(
     ): ApiResult<ForecastResponseDto> {
         val cacheKey = "forecast_${lat}_${lon}_${units}_${lang}"
 
-        val cachedData = weatherCacheDao.getCache(cacheKey, System.currentTimeMillis())
+        val cachedData = localDataSource.getCache(cacheKey, System.currentTimeMillis())
 
         return try {
             val result = remoteDataSource.fetchForecast(
@@ -98,7 +97,7 @@ class BreezRepositoryImpl @Inject constructor(
 
             if (result is ApiResult.Success) {
                 val jsonData = gson.toJson(result.data)
-                weatherCacheDao.insertCache(
+                localDataSource.insertCache(
                     WeatherCacheEntity(
                         cacheKey = cacheKey,
                         jsonData = jsonData,
@@ -114,7 +113,7 @@ class BreezRepositoryImpl @Inject constructor(
             var cacheToUse = cachedData
 
             if (cacheToUse == null) {
-                cacheToUse = weatherCacheDao.getCacheIgnoreExpiry(cacheKey)
+                cacheToUse = localDataSource.getCacheIgnoreExpiry(cacheKey)
             }
 
             if (cacheToUse != null) {
@@ -143,50 +142,50 @@ class BreezRepositoryImpl @Inject constructor(
     }
 
     override fun getAllFavorites(): Flow<List<FavoriteEntity>> {
-        return favoriteDao.getAllFavorites()
+        return localDataSource.getAllFavorites()
     }
 
     override suspend fun getFavoriteById(id: Long): FavoriteEntity? {
-        return favoriteDao.getFavoriteById(id)
+        return localDataSource.getFavoriteById(id)
     }
 
     override suspend fun insertFavorite(favorite: FavoriteEntity) {
-        favoriteDao.insertFavorite(favorite)
+        localDataSource.insertFavorite(favorite)
     }
 
     override suspend fun updateFavorite(favorite: FavoriteEntity) {
-        favoriteDao.insertFavorite(favorite)
+        localDataSource.updateFavorite(favorite)
     }
 
     override suspend fun deleteFavorite(favorite: FavoriteEntity) {
-        favoriteDao.deleteFavorite(favorite)
+        localDataSource.deleteFavorite(favorite)
     }
 
     override suspend fun isFavorite(lat: Double, lon: Double): Boolean {
-        return favoriteDao.isFavorite(lat, lon) > 0
+        return localDataSource.isFavorite(lat, lon)
     }
 
     override fun getAllAlerts(): Flow<List<AlertEntity>> {
-        return alertDao.getAllAlerts()
+        return localDataSource.getAllAlerts()
     }
 
     override suspend fun getAlertById(id: Long): AlertEntity? {
-        return alertDao.getAlertById(id)
+        return localDataSource.getAlertById(id)
     }
 
     override suspend fun insertAlert(alert: AlertEntity): Long {
-        return alertDao.insertAlert(alert)
+        return localDataSource.insertAlert(alert)
     }
 
     override suspend fun updateAlert(alert: AlertEntity) {
-        alertDao.updateAlert(alert)
+        localDataSource.updateAlert(alert)
     }
 
     override suspend fun deleteAlert(alert: AlertEntity) {
-        alertDao.deleteAlert(alert)
+        localDataSource.deleteAlert(alert)
     }
 
     override suspend fun getActiveAlerts(): List<AlertEntity> {
-        return alertDao.getActiveAlerts()
+        return localDataSource.getActiveAlerts()
     }
 }

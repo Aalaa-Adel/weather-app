@@ -114,7 +114,7 @@ fun AlertsScreen(
                     .padding(20.dp)
                     .padding(bottom = 120.dp)
             ) {
-                EnhancedFAB(
+                FAB(
                     onClick = { viewModel.onAddAlertClick() },
                     icon = Icons.Outlined.Add,
                 )

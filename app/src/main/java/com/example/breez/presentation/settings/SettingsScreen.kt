@@ -87,7 +87,6 @@ fun SettingsScreen(
         mutableStateOf(uiState.windSpeedUnit)
     }
 
-    // Auto-save when any setting changes
     LaunchedEffect(
         selectedTemperatureState.value,
         selectedLocationState.value,
@@ -95,7 +94,6 @@ fun SettingsScreen(
         selectedThemeState.value,
         selectedWindSpeedState.value
     ) {
-        // Skip initial save on first composition
         if (selectedTemperatureState.value != uiState.temperatureUnit ||
             selectedLocationState.value != uiState.locationSource ||
             selectedLanguageState.value != uiState.language ||
@@ -114,7 +112,6 @@ fun SettingsScreen(
 
     WeatherScreenBackground {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Scrollable content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -259,7 +256,9 @@ fun SettingsScreen(
                         title = "Kilometers/Hour (km/h)",
                         subtitle = "Common in most countries",
                         selected = selectedWindSpeedState.value == WindSpeedUnit.KILOMETERS_PER_HOUR,
-                        onClick = { selectedWindSpeedState.value = WindSpeedUnit.KILOMETERS_PER_HOUR }
+                        onClick = {
+                            selectedWindSpeedState.value = WindSpeedUnit.KILOMETERS_PER_HOUR
+                        }
                     )
 
                     SettingsRadioItem(
@@ -272,7 +271,6 @@ fun SettingsScreen(
             }
         }
 
-        // Map Confirm Dialog
         if (uiState.showMapConfirmDialog) {
             MapConfirmDialog(
                 onDismiss = { viewModel.dismissMapConfirmDialog() },
@@ -284,7 +282,6 @@ fun SettingsScreen(
             )
         }
 
-        // GPS Confirm Dialog
         if (uiState.showGpsConfirmDialog) {
             GpsConfirmDialog(
                 onDismiss = { viewModel.dismissGpsConfirmDialog() },
@@ -295,7 +292,6 @@ fun SettingsScreen(
             )
         }
 
-        // Location Disabled Dialog
         if (uiState.showLocationDisabledDialog) {
             LocationDisabledDialog(
                 onDismiss = { viewModel.dismissLocationDisabledDialog() },

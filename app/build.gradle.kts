@@ -131,4 +131,27 @@ dependencies {
     implementation(libs.extension.compose)
     implementation(libs.mapbox.search.ui)
 
+
+
+    testImplementation(libs.junit)
+    testImplementation(libs.androidx.test.core.ktx)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.junit.ktx)
+    testImplementation(libs.arch.core.testing)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
+
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.arch.core.testing)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.turbine)
+    androidTestImplementation(libs.hilt.android.testing)
+
+    implementation(libs.kotlin.stdlib.jdk7)
+    implementation(libs.androidx.fragment.ktx)
+
 }
