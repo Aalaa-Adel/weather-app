@@ -267,7 +267,7 @@ private fun FavoriteCardContent(favorite: FavoriteEntity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(end = 50.dp),
+            .padding(end = 60.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (favorite.weatherIcon != null) {
