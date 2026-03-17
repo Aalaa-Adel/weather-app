@@ -2,12 +2,15 @@ package com.example.breez.di
 
 
 import android.content.Context
+import androidx.room.Room
+import com.example.breez.data.datasource.local.LocalDataSource
+import com.example.breez.data.datasource.local.LocalDataSourceImpl
 import com.example.breez.data.datasource.remote.WeatherApiService
+import com.example.breez.data.datasource.remote.RemoteDataSource
 import com.example.breez.data.datasource.remote.WeatherRemoteDataSource
 import com.example.breez.data.datasource.preferences.SettingsPreferencesManager
 import com.example.breez.data.location.LocationProvider
 import com.example.breez.data.network.NetworkMonitor
-
 import com.example.breez.data.db.BreezDatabase
 import com.example.breez.data.db.dao.FavoriteDao
 import com.example.breez.data.db.dao.AlertDao
@@ -55,16 +58,22 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideWeatherRemoteDataSource(
-        apiService: WeatherApiService
-    ): WeatherRemoteDataSource {
-        return WeatherRemoteDataSource(apiService)
+    fun provideBreezDatabase(@ApplicationContext context: Context): BreezDatabase {
+        return Room.databaseBuilder(
+            context,
+            BreezDatabase::class.java,
+            BreezDatabase.DATABASE_NAME
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideBreezDatabase(@ApplicationContext context: Context): BreezDatabase {
-        return BreezDatabase.create(context)
+    fun provideWeatherRemoteDataSource(
+        apiService: WeatherApiService
+    ): RemoteDataSource {
+        return WeatherRemoteDataSource(apiService)
     }
 
     @Provides
@@ -84,14 +93,22 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBreezRepository(
-        remoteDataSource: WeatherRemoteDataSource,
-        weatherCacheDao: WeatherCacheDao,
+    fun provideLocalDataSource(
         favoriteDao: FavoriteDao,
         alertDao: AlertDao,
+        weatherCacheDao: WeatherCacheDao
+    ): LocalDataSource {
+        return LocalDataSourceImpl(favoriteDao, alertDao, weatherCacheDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBreezRepository(
+        remoteDataSource: RemoteDataSource,
+        localDataSource: LocalDataSource,
         gson: Gson
     ): BreezRepository {
-        return BreezRepositoryImpl(remoteDataSource, weatherCacheDao, favoriteDao, alertDao, gson)
+        return BreezRepositoryImpl(remoteDataSource, localDataSource, gson)
     }
 
     @Provides

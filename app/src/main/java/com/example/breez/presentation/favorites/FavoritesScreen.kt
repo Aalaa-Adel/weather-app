@@ -1,8 +1,5 @@
 package com.example.breez.presentation.favorites
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -23,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -108,7 +104,7 @@ fun FavoritesScreen(
                     .padding(20.dp)
                     .padding(bottom = 120.dp)
             ) {
-                EnhancedFAB(
+                FAB(
                     onClick = onNavigateToAddFavorite,
                     contentDescription = "Add favorite location"
                 )
@@ -392,49 +388,6 @@ private fun FavoriteCardContent(favorite: FavoriteEntity) {
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
                         )
                     }
-                }
-            }
-        }
-    }
-}
-@Composable
-private fun EnhancedSnackbar(snackbarData: SnackbarData) {
-    Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = glassSurfaceColor(),
-        tonalElevation = 0.dp,
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    glassBorderColor(),
-                    RoundedCornerShape(12.dp)
-                )
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = snackbarData.visuals.message,
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.weight(1f)
-            )
-
-            snackbarData.visuals.actionLabel?.let { actionLabel ->
-                TextButton(
-                    onClick = { snackbarData.performAction() },
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Text(
-                        text = actionLabel,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelSmall
-                    )
                 }
             }
         }

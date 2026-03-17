@@ -1,8 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- اسم التطبيق -->
+    <string name="app_name">نسيم</string>
 
-    <string name="loading_message">جارِ تحميل الطقس...</string>
-    <string name="error_message">حدث خطأ ما</string>
-    <string name="temperature_unit">وحدة الحرارة</string>
+    <!-- الشاشة الرئيسية -->
+    <string name="home_title">الرئيسية</string>
+    <string name="current_weather">الطقس الحالي</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="pressure">الضغط الجوي</string>
+    <string name="feels_like">يشعر وكأنه</string>
+    <string name="visibility">الرؤية</string>
+    <string name="uv_index">مؤشر الأشعة فوق البنفسجية</string>
+
+    <!-- شاشة المفضلة -->
+    <string name="favorites_title">المفضلة</string>
+    <string name="add_favorite">إضافة مفضلة</string>
+    <string name="no_favorites">لا توجد مفضلات</string>
+    <string name="favorite_added">تمت إضافة المفضلة</string>
+    <string name="favorite_removed">تمت إزالة المفضلة</string>
+    <string name="favorite_details">تفاصيل المفضلة</string>
+    <string name="city_name">اسم المدينة</string>
+    <string name="country">الدولة</string>
+    <string name="latitude">خط العرض</string>
+    <string name="longitude">خط الطول</string>
+
+    <!-- شاشة التنبيهات -->
+    <string name="alerts_title">التنبيهات</string>
+    <string name="add_alert">إضافة تنبيه</string>
+    <string name="edit_alert">تعديل التنبيه</string>
+    <string name="no_alerts">لا توجد تنبيهات</string>
+    <string name="alert_added">تمت إضافة التنبيه</string>
+    <string name="alert_deleted">تم حذف التنبيه</string>
+    <string name="alert_activated">تم تفعيل التنبيه</string>
+    <string name="alert_deactivated">تم تعطيل التنبيه</string>
+    <string name="alert_title">عنوان التنبيه</string>
+    <string name="alert_description">وصف التنبيه</string>
+    <string name="alert_type">نوع التنبيه</string>
+    <string name="alert_type_notification">إشعار</string>
+    <string name="alert_type_alarm">منبه</string>
+    <string name="start_time">وقت البداية</string>
+    <string name="end_time">وقت النهاية</string>
+    <string name="alert_active">التنبيه نشط</string>
+    <string name="alert_inactive">التنبيه غير نشط</string>
+
+    <!-- شاشة الإعدادات -->
+    <string name="settings_title">الإعدادات</string>
+    <string name="language">اللغة</string>
+    <string name="location_source">مصدر الموقع</string>
+    <string name="location_source_gps">GPS</string>
+    <string name="location_source_manual">يدوي</string>
+    <string name="notifications_enabled">تفعيل الإشعارات</string>
+    <string name="temperature_unit">وحدة درجة الحرارة</string>
+    <string name="celsius">درجة مئوية</string>
+    <string name="fahrenheit">درجة فهرنهايت</string>
     <string name="wind_speed_unit">وحدة سرعة الرياح</string>
+    <string name="kmh">كم/س</string>
+    <string name="ms">م/ث</string>
+    <string name="about">حول التطبيق</string>
+    <string name="version">الإصدار</string>
+
+    <!-- وصف الإعدادات -->
+    <string name="choose_temperature_display">اختر كيفية عرض درجة الحرارة</string>
+    <string name="celsius_description">الأفضل لبيانات الطقس المترية</string>
+    <string name="fahrenheit_description">شائع لعرض الطقس بالنمط الأمريكي</string>
+    <string name="kelvin_description">وحدة درجة الحرارة العلمية الخام</string>
+    <string name="choose_location_source">اختر كيفية حصول التطبيق على موقعك</string>
+    <string name="gps_description">استخدم موقع جهازك الحي</string>
+    <string name="manual_description">اختر موقعاً يدويًا</string>
+    <string name="choose_app_language">اختر لغة التطبيق</string>
+    <string name="arabic_name">العربية</string>
+    <string name="arabic_interface">واجهة عربية</string>
+    <string name="english_name">English</string>
+    <string name="english_interface">واجهة إنجليزية</string>
+    <string name="theme_mode">وضع المظهر</string>
+    <string name="control_appearance">تحكم في مظهر التطبيق</string>
+    <string name="system_default">الافتراضي للنظام</string>
+    <string name="follow_device">اتبع مظهر الجهاز</string>
+    <string name="light_theme">فاتح</string>
+    <string name="bright_clean">مظهر مشرق ونظيف</string>
+    <string name="dark_theme">داكن</string>
+    <string name="deep_lowlight">نمط أعمق منخفض الإضاءة</string>
+    <string name="choose_wind_unit">اختر وحدة سرعة الرياح</string>
+    <string name="meters_per_second">متر/ثانية (م/ث)</string>
+    <string name="metric_unit">وحدة النظام المتري</string>
+    <string name="kilometers_per_hour">كيلومتر/ساعة (كم/س)</string>
+    <string name="common_countries">شائع في معظم الدول</string>
+    <string name="miles_per_hour">ميل/ساعة (ميل/س)</string>
+    <string name="us_system">شائع للنظام الأمريكي</string>
+
+    <!-- الأزرار والإجراءات -->
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="delete">حذف</string>
+    <string name="edit">تعديل</string>
+    <string name="add">إضافة</string>
+    <string name="refresh">تحديث</string>
+    <string name="ok">موافق</string>
+    <string name="close">إغلاق</string>
+    <string name="search">بحث</string>
+    <string name="clear">مسح</string>
+    <string name="apply">تطبيق</string>
+
+    <!-- الرسائل والأخطاء -->
+    <string name="error">خطأ</string>
+    <string name="error_loading_data">خطأ في تحميل البيانات</string>
+    <string name="error_network">خطأ في الاتصال بالإنترنت</string>
+    <string name="error_location">خطأ في الحصول على الموقع</string>
+    <string name="error_permission">لم يتم منح الإذن المطلوب</string>
+    <string name="loading">جاري التحميل...</string>
+    <string name="no_data">لا توجد بيانات</string>
+    <string name="try_again">حاول مرة أخرى</string>
+    <string name="success">نجح</string>
+
+    <!-- الأوقات والتواريخ -->
+    <string name="today">اليوم</string>
+    <string name="tomorrow">غدا</string>
+    <string name="yesterday">أمس</string>
+    <string name="this_week">هذا الأسبوع</string>
+    <string name="this_month">هذا الشهر</string>
+
+    <!-- الإذن والخصوصية -->
+    <string name="permission_location">إذن الموقع</string>
+    <string name="permission_notification">إذن الإشعارات</string>
+    <string name="permission_required">الإذن مطلوب</string>
+    <string name="grant_permission">منح الإذن</string>
+
+    <!-- الخريطة -->
+    <string name="select_location">اختر الموقع</string>
+    <string name="location_selected">تم اختيار الموقع</string>
+    <string name="map_title">الخريطة</string>
+
+    <!-- الشاشة الأولى -->
+    <string name="splash_welcome">مرحبا بك في نسيم</string>
+    <string name="splash_subtitle">تطبيق الطقس الذكي</string>
+    <string name="get_started">ابدأ الآن</string>
+
+    <!-- الوحدات -->
+    <string name="unit_celsius">°C</string>
+    <string name="unit_fahrenheit">°F</string>
+    <string name="unit_kmh">كم/س</string>
+    <string name="unit_ms">م/ث</string>
+    <string name="unit_mb">ملي بار</string>
+    <string name="unit_km">كم</string>
+    <string name="unit_m">م</string>
+
+    <!-- الحالات الجوية -->
+    <string name="weather_clear">صافي</string>
+    <string name="weather_cloudy">غائم</string>
+    <string name="weather_rainy">ممطر</string>
+    <string name="weather_snowy">ثلجي</string>
+    <string name="weather_stormy">عاصف</string>
+    <string name="weather_foggy">ضبابي</string>
+    <string name="weather_windy">عاصف</string>
+
+    <!-- الاتجاهات -->
+    <string name="direction_north">شمال</string>
+    <string name="direction_south">جنوب</string>
+    <string name="direction_east">شرق</string>
+    <string name="direction_west">غرب</string>
+    <string name="direction_northeast">شمال شرق</string>
+    <string name="direction_northwest">شمال غرب</string>
+    <string name="direction_southeast">جنوب شرق</string>
+    <string name="direction_southwest">جنوب غرب</string>
+
+    <!-- الإحصائيات -->
+    <string name="statistics">الإحصائيات</string>
+    <string name="max_temperature">أقصى درجة حرارة</string>
+    <string name="min_temperature">أدنى درجة حرارة</string>
+    <string name="average_temperature">متوسط درجة الحرارة</string>
+    <string name="total_precipitation">إجمالي الهطول</string>
+
+    <!-- التنبيهات المتقدمة -->
+    <string name="alert_settings">إعدادات التنبيه</string>
+    <string name="alert_frequency">تكرار التنبيه</string>
+    <string name="alert_sound">صوت التنبيه</string>
+    <string name="alert_vibration">اهتزاز</string>
+    <string name="alert_light">ضوء</string>
+    <string name="test_notification">اختبار الإشعار</string>
+    <string name="test_notification_sent">تم إرسال إشعار الاختبار</string>
+
+    <!-- الملف الشخصي -->
+    <string name="profile">الملف الشخصي</string>
+    <string name="my_locations">مواقعي</string>
+    <string name="my_alerts">تنبيهاتي</string>
+    <string name="preferences">التفضيلات</string>
+    <string name="help">المساعدة</string>
+    <string name="feedback">الملاحظات</string>
+    <string name="rate_app">قيم التطبيق</string>
+    <string name="share_app">شارك التطبيق</string>
+
+    <!-- الرسائل الخاصة -->
+    <string name="confirm_delete">هل أنت متأكد من الحذف؟</string>
+    <string name="confirm_delete_alert">هل تريد حذف هذا التنبيه؟</string>
+    <string name="confirm_delete_favorite">هل تريد حذف هذه المفضلة؟</string>
+    <string name="deleted_successfully">تم الحذف بنجاح</string>
+    <string name="saved_successfully">تم الحفظ بنجاح</string>
+    <string name="updated_successfully">تم التحديث بنجاح</string>
+
+    <!-- الفترات الزمنية -->
+    <string name="time_now">الآن</string>
+    <string name="time_1_hour">بعد ساعة</string>
+    <string name="time_2_hours">بعد ساعتين</string>
+    <string name="time_3_hours">بعد 3 ساعات</string>
+    <string name="time_6_hours">بعد 6 ساعات</string>
+    <string name="time_12_hours">بعد 12 ساعة</string>
+    <string name="time_24_hours">بعد 24 ساعة</string>
+
+    <!-- الأيام -->
+    <string name="monday">الاثنين</string>
+    <string name="tuesday">الثلاثاء</string>
+    <string name="wednesday">الأربعاء</string>
+    <string name="thursday">الخميس</string>
+    <string name="friday">الجمعة</string>
+    <string name="saturday">السبت</string>
+    <string name="sunday">الأحد</string>
+
+    <!-- الأشهر -->
+    <string name="january">يناير</string>
+    <string name="february">فبراير</string>
+    <string name="march">مارس</string>
+    <string name="april">أبريل</string>
+    <string name="may">مايو</string>
+    <string name="june">يونيو</string>
+    <string name="july">يوليو</string>
+    <string name="august">أغسطس</string>
+    <string name="september">سبتمبر</string>
+    <string name="october">أكتوبر</string>
+    <string name="november">نوفمبر</string>
+    <string name="december">ديسمبر</string>
 </resources>

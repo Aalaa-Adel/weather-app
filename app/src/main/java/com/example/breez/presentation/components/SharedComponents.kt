@@ -98,7 +98,7 @@ fun GlassIconButton(
 }
 
 @Composable
-fun EnhancedFAB(
+fun FAB(
     onClick: () -> Unit,
     icon: ImageVector = Icons.Outlined.Add,
     contentDescription: String = "Add"

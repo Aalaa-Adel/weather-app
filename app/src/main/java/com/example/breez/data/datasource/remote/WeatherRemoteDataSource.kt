@@ -11,10 +11,10 @@ import javax.inject.Inject
 
 class WeatherRemoteDataSource @Inject constructor(
     private val apiService: WeatherApiService
-) {
+) : RemoteDataSource {
     private val weatherApiKey = BuildConfig.OPEN_WEATHER_API_KEY
 
-    suspend fun fetchCurrentWeather(
+    override suspend fun fetchCurrentWeather(
         lat: Double,
         lon: Double,
         units: String,
@@ -41,7 +41,7 @@ class WeatherRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun fetchForecast(
+    override suspend fun fetchForecast(
         lat: Double,
         lon: Double,
         units: String,
@@ -68,7 +68,7 @@ class WeatherRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun fetchCoordinatesFromCityName(cityName: String): ApiResult<List<GeocodingDto>> {
+    override suspend fun fetchCoordinatesFromCityName(cityName: String): ApiResult<List<GeocodingDto>> {
         return try {
             val response = apiService.getCoordinatesFromCityName(
                 cityName = cityName,
@@ -87,7 +87,7 @@ class WeatherRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun fetchLocationNameFromCoordinates(
+    override suspend fun fetchLocationNameFromCoordinates(
         lat: Double,
         lon: Double
     ): ApiResult<List<GeocodingDto>> {
