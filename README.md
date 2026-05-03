@@ -100,7 +100,7 @@ The app provides real-time weather updates, hourly and 5-day forecasts, favorite
 
 | Splash | Home Light | Home Dark |
 |--------|------------|-----------|
-| <img src="docs/screenshots/splash.png" width="220"/> | <img src="docs/screenshots/home_light.jpeg" width="220"/> | <img src="docs/screenshots/home_dark.jpeg" width="220"/> |
+| <img src="docs/screenshots/splash.jpeg" width="220"/> | <img src="docs/screenshots/home_light.jpeg" width="220"/> | <img src="docs/screenshots/home_dark.jpeg" width="220"/> |
 
 | Forecast | Favorites | Favorite Details |
 |----------|-----------|------------------|
