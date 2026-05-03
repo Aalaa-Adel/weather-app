@@ -361,46 +361,6 @@ Breaz uses the **OpenWeatherMap API**.
 
 ---
 
-## ⚠️ Challenges
-
-- Handling location permission correctly
-- Supporting both GPS and manual map location
-- Managing weather unit conversion
-- Keeping app settings persistent
-- Scheduling weather alerts reliably
-- Supporting Arabic and English localization
-- Keeping UI consistent in Light and Dark mode
-- Managing multiple async sources with Kotlin Flow
-
----
-
-## ✅ Solutions
-
-- Used **DataStore** for persistent app preferences
-- Used **Room** for favorites and alerts
-- Used **Mapbox** for location search and map picking
-- Used **AlarmManager** for scheduled weather alerts
-- Used **Hilt** for dependency injection
-- Used **Repository pattern** for clean data access
-- Used **UiState** pattern for loading, success, and error states
-- Used **Lottie** for animated weather icons
-- Used **Material 3** for consistent and modern UI
-
----
-
-## 🚧 Future Improvements
-
-- Add home screen weather widgets
-- Add weather radar map
-- Add severe weather warnings
-- Add air quality index
-- Add daily weather summary notifications
-- Add more advanced animations
-- Add unit and UI tests
-- Improve tablet and landscape support
-- Add offline caching for the latest forecast
-
----
 
 ## 🚀 Release
 
