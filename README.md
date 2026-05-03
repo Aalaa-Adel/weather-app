@@ -404,6 +404,10 @@ Breaz uses the **OpenWeatherMap API**.
 
 ## 🚀 Release
 
+You can download the latest APK release from here:
+
+[![Latest Release](https://img.shields.io/badge/Download-Latest%20Release-8B5CF6?style=for-the-badge&logo=github)](https://github.com/Aalaa-Adel/weather-app/releases/latest)
+
 ### Latest Release: `v1.0.0`
 
 Initial stable release of **Breaz Weather App**.
@@ -424,18 +428,14 @@ Includes:
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
 
-```text
-MIT License
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](https://github.com/Aalaa-Adel/weather-app/blob/main/LICENSE)
 
-Copyright (c) 2026 Breaz
+You can read the full license here:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files to deal in the Software
-without restriction, including without limitation the rights to use, copy,
-modify, merge, publish, distribute, sublicense, and/or sell copies of the Software.
-```
+👉 [MIT License](https://github.com/Aalaa-Adel/weather-app/blob/main/LICENSE)
+
 
 ---
 
