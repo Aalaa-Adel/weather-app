@@ -61,7 +61,10 @@ class FavoritesViewModelTest {
         coEvery { repository.insertFavorite(any()) } just runs
         coEvery { repository.deleteFavorite(any()) } just runs
 
-        viewModel = FavoritesViewModel(repository)
+        viewModel = FavoritesViewModel(
+            repository,
+            settingsManager = TODO()
+        )
     }
 
     @After
