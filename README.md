@@ -97,21 +97,18 @@ The app provides real-time weather updates, hourly and 5-day forecasts, favorite
 
 ## 📱 Screenshots
 
-> Add your real screenshots inside:
->
-> `docs/screenshots/`
 
 | Splash | Home Light | Home Dark |
 |--------|------------|-----------|
-| <img src="docs/screenshots/splash.png" width="220"/> | <img src="docs/screenshots/home_light.png" width="220"/> | <img src="docs/screenshots/home_dark.png" width="220"/> |
+| <img src="docs/screenshots/splash.png" width="220"/> | <img src="docs/screenshots/home_light.jpeg" width="220"/> | <img src="docs/screenshots/home_dark.jpeg" width="220"/> |
 
 | Forecast | Favorites | Favorite Details |
 |----------|-----------|------------------|
-| <img src="docs/screenshots/forecast.png" width="220"/> | <img src="docs/screenshots/favorites.png" width="220"/> | <img src="docs/screenshots/favorite_details.png" width="220"/> |
+| <img src="docs/screenshots/forecast.jpeg" width="220"/> | <img src="docs/screenshots/favorites.jpeg" width="220"/> | <img src="docs/screenshots/favorite_details.jpeg" width="220"/> |
 
 | Map Picker | Alerts | Settings |
 |------------|--------|----------|
-| <img src="docs/screenshots/map_picker.png" width="220"/> | <img src="docs/screenshots/alerts.png" width="220"/> | <img src="docs/screenshots/settings.png" width="220"/> |
+| <img src="docs/screenshots/map_picker.jpeg" width="220"/> | <img src="docs/screenshots/alerts.jpeg" width="220"/> | <img src="docs/screenshots/settings.jpeg" width="220"/> |
 
 ---
 
