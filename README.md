@@ -100,15 +100,15 @@ The app provides real-time weather updates, hourly and 5-day forecasts, favorite
 
 | Splash | Home Light | Home Dark |
 |--------|------------|-----------|
-| <img src="docs/screenshots/splash.jpeg" width="220"/> | <img src="docs/screenshots/home_light.jpeg" width="220"/> | <img src="docs/screenshots/home_dark.jpeg" width="220"/> |
+| ![](screenshots//splash.jpeg) |  ![](screenshots/home_light.jpeg)|  ![](screenshots/home_dark.jpeg) |
 
 | Forecast | Favorites | Favorite Details |
 |----------|-----------|------------------|
-| <img src="docs/screenshots/forecast.jpeg" width="220"/> | <img src="docs/screenshots/favorites.jpeg" width="220"/> | <img src="docs/screenshots/favorite_details.jpeg" width="220"/> |
+| ![](screenshots/forecast.jpeg) | ![](screenshots/favorites.jpeg) | ![](screenshots/favorite_details.jpeg) |
 
 | Map Picker | Alerts | Settings |
 |------------|--------|----------|
-| <img src="docs/screenshots/map_picker.jpeg" width="220"/> | <img src="docs/screenshots/alerts.jpeg" width="220"/> | <img src="docs/screenshots/settings.jpeg" width="220"/> |
+| ![](screenshots/map_picker.jpeg") | ![](screenshots/alerts.jpeg) | ![](screenshots/settings.jpeg) |
 
 ---
 
