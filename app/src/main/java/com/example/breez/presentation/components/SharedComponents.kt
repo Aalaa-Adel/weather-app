@@ -5,24 +5,43 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.breez.R
 import kotlinx.coroutines.launch
 
 @Composable
@@ -49,6 +68,7 @@ fun softOverlayColor(): Color {
         MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
     }
 }
+
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
@@ -57,8 +77,7 @@ fun GlassCard(
 ) {
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(cornerRadius))
-            .background(glassSurfaceColor())
+            .background(glassSurfaceColor(), RoundedCornerShape(cornerRadius))
             .border(
                 width = 1.5.dp,
                 color = glassBorderColor(),
@@ -101,7 +120,7 @@ fun GlassIconButton(
 fun FAB(
     onClick: () -> Unit,
     icon: ImageVector = Icons.Outlined.Add,
-    contentDescription: String = "Add"
+    contentDescription: String = stringResource(R.string.cd_add)
 ) {
     val scale = remember { Animatable(1f) }
     val scope = rememberCoroutineScope()
@@ -140,6 +159,49 @@ fun FAB(
 }
 
 @Composable
+fun CompactSnackbar(snackbarData: SnackbarData) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = glassSurfaceColor(),
+        tonalElevation = 0.dp,
+        shadowElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    1.dp,
+                    glassBorderColor(),
+                    RoundedCornerShape(12.dp)
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = snackbarData.visuals.message,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.weight(1f)
+            )
+
+            snackbarData.visuals.actionLabel?.let { actionLabel ->
+                TextButton(
+                    onClick = { snackbarData.performAction() },
+                    modifier = Modifier
+                ) {
+                    Text(
+                        text = actionLabel,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun BreezTopBar(
     title: String,
     subtitle: String? = null,
@@ -160,7 +222,7 @@ fun BreezTopBar(
                     icon = {
                         Icon(
                             imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.cd_back),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }

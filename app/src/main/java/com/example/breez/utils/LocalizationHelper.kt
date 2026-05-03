@@ -1,12 +1,12 @@
 package com.example.breez.utils
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import androidx.core.content.edit
 import com.example.breez.data.datasource.preferences.AppLanguage
-import javax.inject.Singleton
 import java.util.Locale
-
+import javax.inject.Singleton
 
 @Singleton
 class LocalizationHelper {
@@ -20,84 +20,43 @@ class LocalizationHelper {
                 .getBoolean(KEY_SPLASH_SEEN, false)
         }
 
-        /**
-         * تحديد شاشة البداية كمعروضة
-         */
         fun markSplashAsSeen(context: Context) {
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit {
                 putBoolean(KEY_SPLASH_SEEN, true)
             }
         }
 
-        /**
-         * تطبيق اللغة المحفوظة بدون الحقن
-         */
-        fun applyWithoutDI(context: Context): Context {
-            val languageCode = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_LANGUAGE, null)
-            languageCode ?: return context
-
-            val language = try {
-                AppLanguage.valueOf(languageCode)
-            } catch (_: Exception) {
-                return context
-            }
-
-            return applyLanguage(context, language)
-        }
-
-        /**
-         * حفظ اللغة المختارة في التفضيلات
-         */
         fun saveLanguageToPrefs(context: Context, language: AppLanguage) {
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit {
                 putString(KEY_LANGUAGE, language.name)
             }
         }
 
-        /**
-         * تطبيق اللغة على السياق
-         */
-        fun applyLanguage(context: Context, language: AppLanguage): Context {
-            val locale = Locale.forLanguageTag(language.apiValue)
-            Locale.setDefault(locale)
-
-            val config = Configuration(context.resources.configuration)
-            config.setLocale(locale)
-            config.setLayoutDirection(locale)
-
-            return context.createConfigurationContext(config)
-        }
-
-        /**
-         * تطبيق اللغة على السياق مع تحديث الموارد
-         */
-        fun applyLanguageWithUpdate(context: Context, language: AppLanguage) {
-            val locale = Locale.forLanguageTag(language.apiValue)
-            Locale.setDefault(locale)
-
-            val config = Configuration(context.resources.configuration)
-            config.setLocale(locale)
-            config.setLayoutDirection(locale)
-
-            context.resources.updateConfiguration(config, context.resources.displayMetrics)
-        }
-
-        /**
-         * تطبيق اللغة المحفوظة مع تحديث الموارد
-         */
-        fun applyLanguageWithUpdate(context: Context) {
+        fun getSavedLanguage(context: Context): AppLanguage {
             val languageCode = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getString(KEY_LANGUAGE, null)
-            languageCode ?: return
+                .getString(KEY_LANGUAGE, AppLanguage.ARABIC.name)
 
-            val language = try {
-                AppLanguage.valueOf(languageCode)
+            return try {
+                AppLanguage.valueOf(languageCode ?: AppLanguage.ARABIC.name)
             } catch (_: Exception) {
-                return
+                AppLanguage.ARABIC
             }
+        }
 
-            applyLanguageWithUpdate(context, language)
+        fun applyLanguage(context: Context, language: AppLanguage): ContextWrapper {
+            val locale = Locale(language.apiValue)
+            Locale.setDefault(locale)
+
+            val config = Configuration(context.resources.configuration)
+            config.setLocale(locale)
+            config.setLayoutDirection(locale)
+
+            val newContext = context.createConfigurationContext(config)
+            return ContextWrapper(newContext)
+        }
+
+        fun applySavedLanguage(context: Context): ContextWrapper {
+            return applyLanguage(context, getSavedLanguage(context))
         }
     }
 }

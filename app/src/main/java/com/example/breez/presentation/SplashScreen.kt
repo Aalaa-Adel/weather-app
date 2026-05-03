@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -196,7 +197,7 @@ fun SplashScreen(onFinish: () -> Unit) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                     painter = painterResource(R.drawable.logo),
-                    contentDescription = "Breez Logo",
+                    contentDescription = stringResource(R.string.cd_breez_logo),
                     modifier = Modifier
                         .size(180.dp)
                         .graphicsLayer {
@@ -211,7 +212,7 @@ fun SplashScreen(onFinish: () -> Unit) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Forecast made calm",
+                    text = stringResource(R.string.splash_tagline),
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,

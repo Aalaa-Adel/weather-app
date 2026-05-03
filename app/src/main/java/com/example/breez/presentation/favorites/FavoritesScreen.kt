@@ -1,34 +1,45 @@
 package com.example.breez.presentation.favorites
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Air
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.Map
-import androidx.compose.material.icons.outlined.WaterDrop
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import com.example.breez.R
 import com.example.breez.WeatherScreenBackground
 import com.example.breez.data.db.entity.FavoriteEntity
-import com.example.breez.presentation.components.*
+import com.example.breez.presentation.components.BreezTopBar
+import com.example.breez.presentation.components.CompactSnackbar
+import com.example.breez.presentation.components.FAB
+import com.example.breez.presentation.components.SwipeToDeleteCard
+import com.example.breez.presentation.favorites.components.EmptyFavoritesContent
+import com.example.breez.presentation.favorites.components.FavoriteCardContent
+import com.example.breez.presentation.favorites.components.FavoritesLoadingContent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +52,7 @@ fun FavoritesScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
     var recentlyDeleted by remember { mutableStateOf<FavoriteEntity?>(null) }
 
     WeatherScreenBackground {
@@ -55,13 +67,13 @@ fun FavoritesScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 BreezTopBar(
-                    title = "Favorites",
-                    subtitle = "Your saved weather locations"
+                    title = stringResource(R.string.favorites_title),
+                    subtitle = stringResource(R.string.favorites_subtitle)
                 )
 
                 when (val state = uiState) {
                     is FavoritesUiState.Loading -> {
-                        LoadingContent()
+                        FavoritesLoadingContent()
                     }
 
                     is FavoritesUiState.Success -> {
@@ -79,16 +91,21 @@ fun FavoritesScreen(
 
                                     scope.launch {
                                         val result = snackbarHostState.showSnackbar(
-                                            message = "Removed ${favorite.cityName}",
-                                            actionLabel = "Undo",
+                                            message = context.getString(
+                                                R.string.favorite_removed,
+                                                favorite.cityName
+                                            ),
+                                            actionLabel = context.getString(R.string.undo),
                                             withDismissAction = true,
                                             duration = SnackbarDuration.Short
                                         )
+
                                         if (result == SnackbarResult.ActionPerformed) {
                                             recentlyDeleted?.let { deletedFavorite ->
                                                 viewModel.addFavorite(deletedFavorite)
                                             }
                                         }
+
                                         recentlyDeleted = null
                                     }
                                 }
@@ -101,20 +118,20 @@ fun FavoritesScreen(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(20.dp)
-                    .padding(bottom = 120.dp)
+                    .padding(end = 20.dp, bottom = 130.dp)
             ) {
                 FAB(
                     onClick = onNavigateToAddFavorite,
-                    contentDescription = "Add favorite location"
+                    contentDescription = stringResource(R.string.cd_add_favorite_location)
                 )
             }
 
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(20.dp)
-                    .padding(bottom = 70.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
+                    .padding(bottom = 190.dp)
             ) {
                 SnackbarHost(
                     hostState = snackbarHostState,
@@ -126,109 +143,7 @@ fun FavoritesScreen(
         }
     }
 }
-@Composable
-private fun LoadingContent() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        GlassCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(220.dp),
-            cornerRadius = 32.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(48.dp),
-                    strokeWidth = 4.dp
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = "Loading favorites...",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
-    }
-}
 
-@Composable
-private fun EmptyFavoritesContent(
-    onAddFavorite: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 120.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        GlassCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            cornerRadius = 24.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Icon(
-                    Icons.Outlined.FavoriteBorder,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(56.dp)
-                )
-
-                Text(
-                    text = "No favorites yet",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                Text(
-                    text = "Add locations to quickly access their weather",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    onClick = onAddFavorite,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Map,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        "Add location",
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
-            }
-        }
-    }
-}
 @Composable
 private fun FavoritesContent(
     favorites: List<FavoriteEntity>,
@@ -257,182 +172,6 @@ private fun FavoritesContent(
                 }
             ) {
                 FavoriteCardContent(favorite = favorite)
-            }
-        }
-    }
-}
-
-@Composable
-private fun FavoriteCardContent(favorite: FavoriteEntity) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(end = 60.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (favorite.weatherIcon != null) {
-            AsyncImage(
-                model = "https://openweathermap.org/img/wn/${favorite.weatherIcon}@2x.png",
-                contentDescription = favorite.weatherDescription,
-                modifier = Modifier.size(64.dp)
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.20f),
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
-                            )
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Outlined.LocationOn,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = favorite.cityName,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            if (favorite.temperature != null) {
-                Text(
-                    text = "${favorite.temperature.toInt()}°",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-
-            favorite.weatherDescription?.let { desc ->
-                Text(
-                    text = desc.replaceFirstChar { it.uppercase() },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.70f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            if (favorite.temperature == null) {
-                val subtitle = buildList {
-                    favorite.state?.takeIf { it.isNotBlank() }?.let { add(it) }
-                    favorite.countryCode?.takeIf { it.isNotBlank() }?.let { add(it) }
-                }.joinToString(", ")
-
-                if (subtitle.isNotBlank()) {
-                    Text(
-                        text = subtitle,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.70f),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-
-        if (favorite.temperature != null && favorite.humidity != null) {
-            Column(
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.WaterDrop,
-                        contentDescription = null,
-                        tint = Color(0xFF61D3FF),
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                        text = "${favorite.humidity}%",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
-                    )
-                }
-
-                favorite.windSpeed?.let { wind ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            Icons.Outlined.Air,
-                            contentDescription = null,
-                            tint = Color(0xFF9EC5FF),
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Text(
-                            text = "${wind.toInt()} m/s",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.75f)
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun CompactSnackbar(snackbarData: SnackbarData) {
-    Surface(
-        shape = RoundedCornerShape(12.dp),
-        color = glassSurfaceColor(),
-        tonalElevation = 0.dp,
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(
-                    1.dp,
-                    glassBorderColor(),
-                    RoundedCornerShape(12.dp)
-                )
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = snackbarData.visuals.message,
-                style = MaterialTheme.typography.bodySmall,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.weight(1f)
-            )
-
-            snackbarData.visuals.actionLabel?.let { actionLabel ->
-                TextButton(
-                    onClick = { snackbarData.performAction() },
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Text(
-                        text = actionLabel,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelSmall
-                    )
-                }
             }
         }
     }

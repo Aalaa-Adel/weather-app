@@ -1,0 +1,232 @@
+<resources>
+
+    <!-- App -->
+    <string name="app_name">Breez</string>
+
+    <!-- General -->
+    <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="proceed">Proceed</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="loading_weather">Loading weather...</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="current_location">Current Location</string>
+
+    <!-- Home -->
+    <string name="next_24_hours">Next 24 Hours</string>
+    <string name="five_day_forecast">5-Day Forecast</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="pressure">Pressure</string>
+    <string name="clouds">Clouds</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+
+    <!-- Home dialogs -->
+    <string name="location_services_disabled">Location Services Disabled</string>
+    <string name="enable_location_for_current_weather">Location services are disabled. Please enable location to get weather for your current location.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_back">Back</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_refresh">Refresh</string>
+    <string name="cd_offline">Offline</string>
+    <string name="cd_location">Location</string>
+    <string name="cd_expand">Expand</string>
+    <string name="cd_collapse">Collapse</string>
+    <string name="cd_temperature">Temperature</string>
+    <string name="cd_humidity">Humidity</string>
+    <string name="cd_wind">Wind</string>
+    <string name="cd_pressure">Pressure</string>
+    <string name="cd_clouds">Clouds</string>
+    <string name="cd_gps">GPS</string>
+    <string name="cd_map">Map</string>
+    <string name="cd_location_disabled">Location Disabled</string>
+
+    <!-- Settings screen -->
+    <string name="settings">Settings</string>
+    <string name="customize_breez_experience">Customize your Breez experience</string>
+    <string name="personalize_app_your_way">Personalize the app your way</string>
+    <string name="settings_hero_desc">Control temperature units, location source, app language, and appearance mode from one clean place.</string>
+
+    <!-- Sections -->
+    <string name="temperature_unit">Temperature Unit</string>
+    <string name="choose_temperature_display">Choose how temperature is displayed</string>
+
+    <string name="location_source">Location Source</string>
+    <string name="choose_location_source">Choose how the app gets your location</string>
+
+    <string name="language">Language</string>
+    <string name="choose_app_language">Choose the app language</string>
+
+    <string name="theme_mode">Theme Mode</string>
+    <string name="control_app_appearance">Control the app appearance</string>
+
+    <string name="wind_speed_unit">Wind Speed Unit</string>
+    <string name="choose_wind_speed_unit">Choose the unit for wind speed</string>
+
+    <!-- Temperature options -->
+    <string name="celsius">Celsius</string>
+    <string name="celsius_desc">Best for metric weather data</string>
+
+    <string name="fahrenheit">Fahrenheit</string>
+    <string name="fahrenheit_desc">Common for US-style weather display</string>
+
+    <string name="kelvin">Kelvin</string>
+    <string name="kelvin_desc">Raw scientific temperature unit</string>
+
+    <!-- Location options -->
+    <string name="gps">GPS</string>
+    <string name="gps_desc">Use your live device location</string>
+
+    <string name="map">Map</string>
+    <string name="map_desc">Pick a location manually</string>
+
+    <string name="pick_home_location">Pick Home Location</string>
+
+    <!-- Language options -->
+    <string name="arabic">Arabic</string>
+    <string name="arabic_desc">Arabic interface</string>
+
+    <string name="english">English</string>
+    <string name="english_desc">English interface</string>
+
+    <!-- Theme options -->
+    <string name="system_default">System Default</string>
+    <string name="system_default_desc">Follow device appearance</string>
+
+    <string name="light">Light</string>
+    <string name="light_desc">Bright and clean look</string>
+
+    <string name="dark">Dark</string>
+    <string name="dark_desc">Deeper low-light style</string>
+
+    <!-- Wind options -->
+    <string name="meters_per_second">Meters/Second (m/s)</string>
+    <string name="meters_per_second_desc">Metric system unit</string>
+
+    <string name="kilometers_per_hour">Kilometers/Hour (km/h)</string>
+    <string name="kilometers_per_hour_desc">Common in most countries</string>
+
+    <string name="miles_per_hour">Miles/Hour (mph)</string>
+    <string name="miles_per_hour_desc">Common for U.S. system</string>
+
+    <!-- Dialogs -->
+    <string name="pick_from_map">Pick from Map?</string>
+    <string name="pick_from_map_desc">Open the interactive map to precisely select your weather location. This allows you to choose any spot worldwide.</string>
+
+    <string name="use_gps">Use GPS?</string>
+    <string name="use_gps_desc">The app will use your devices GPS to automatically detect and update your weather location. Do you want to enable this?</string>
+
+    <string name="location_disabled">Location is Disabled</string>
+    <string name="location_disabled_desc">Please enable location services in your device settings to use GPS automatically.</string>
+
+    <string name="alerts_title">Weather Alerts</string>
+    <string name="alerts_subtitle">Manage your weather notifications</string>
+    <string name="alerts_loading">Loading alerts...</string>
+    <string name="alerts_empty_title">No alerts yet</string>
+    <string name="alerts_empty_desc">Create weather alerts to get notified about weather conditions</string>
+    <string name="alerts_create">Create alert</string>
+    <string name="alerts_error_title">Error</string>
+    <string name="alerts_retry">Retry</string>
+    <string name="alerts_permission_required">Permission Required</string>
+    <string name="alerts_permission_desc">Notification permission is required to show weather alerts</string>
+    <string name="alerts_check_permissions">Check Permissions</string>
+
+    <string name="alert_add_title">New Alert</string>
+    <string name="alert_edit_title">Edit Alert</string>
+    <string name="alert_form_subtitle">Configure your weather notification</string>
+    <string name="alert_title_label">Alert Title</string>
+    <string name="alert_title_hint">e.g. Morning rain check</string>
+    <string name="alert_description_label">Description (optional)</string>
+    <string name="alert_description_hint">Add a note…</string>
+    <string name="alert_type_label">Alert Type</string>
+    <string name="alert_type_notification">Notification</string>
+    <string name="alert_type_notification_desc">Silent</string>
+    <string name="alert_type_alarm">Alarm</string>
+    <string name="alert_type_alarm_desc">High priority</string>
+    <string name="alert_time_label">Alert Time</string>
+    <string name="alert_time_window_label">Time Window</string>
+    <string name="alert_datetime_label">Date &amp; Time</string>
+    <string name="alert_start_datetime_label">Start Date &amp; Time</string>
+    <string name="alert_end_datetime_label">End Date &amp; Time</string>
+    <string name="alert_pick_time">Pick time</string>
+    <string name="alert_location_label">Location</string>
+    <string name="alert_use_current_location">Use current GPS location</string>
+    <string name="alert_use_specific_location">Use specific location</string>
+    <string name="alert_update">Update Alert</string>
+    <string name="alert_create">Create Alert</string>
+    <string name="alert_go_back">Go Back</string>
+
+    <string name="alert_off">Off</string>
+    <string name="alert_untitled">Untitled alert</string>
+    <string name="alert_location_current">Current location</string>
+    <string name="alert_location_custom">Custom location</string>
+    <string name="alert_schedule_once">Once • %1$s</string>
+    <string name="alert_schedule_daily">Daily • %1$s - %2$s</string>
+
+    <string name="alert_snackbar_removed">Removed %1$s</string>
+    <string name="undo">Undo</string>
+
+    <string name="alert_msg_not_found">Alert not found</string>
+    <string name="alert_msg_failed_load">Failed to load alert: %1$s</string>
+    <string name="alert_msg_title_required">Title is required</string>
+    <string name="alert_msg_start_in_past">Start time cannot be in the past</string>
+    <string name="alert_msg_end_before_start">End time must be after start time</string>
+    <string name="alert_msg_current_location_fallback">Current Location</string>
+    <string name="alert_msg_location_unavailable">Unable to get current location. Make sure GPS is enabled.</string>
+    <string name="alert_msg_location_error">Location error: %1$s</string>
+    <string name="alert_msg_saved">Alert created</string>
+    <string name="alert_msg_updated">Alert updated</string>
+    <string name="alert_msg_failed_save">Failed to save: %1$s</string>
+    <string name="alert_msg_failed_load_alerts">Failed to load alerts: %1$s</string>
+    <string name="alert_msg_activated">Alert activated</string>
+    <string name="alert_msg_deactivated">Alert deactivated</string>
+    <string name="alert_msg_failed_update">Failed to update alert: %1$s</string>
+    <string name="alert_msg_failed_delete">Failed to delete alert: %1$s</string>
+    <string name="alert_msg_test_scheduled">Test notification scheduled (5 seconds)</string>
+    <string name="alert_msg_test_failed">Test failed: %1$s</string>
+    <string name="alert_msg_failed_restore">Failed to restore alert: %1$s</string>
+
+
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_subtitle">Your saved weather locations</string>
+    <string name="favorites_loading">Loading favorites...</string>
+    <string name="favorites_empty_title">No favorites yet</string>
+    <string name="favorites_empty_desc">Add locations to quickly access their weather</string>
+    <string name="favorites_add_location">Add location</string>
+    <string name="favorite_removed">Removed %1$s</string>
+    <string name="favorite_location">Favorite Location</string>
+    <string name="favorite_error_loading_weather">Error loading weather</string>
+    <string name="favorite_deleted">Favorite deleted</string>
+    <string name="favorite_restored">Favorite restored</string>
+    <string name="unknown_location">Unknown Location</string>
+    <string name="cd_add_favorite_location">Add favorite location</string>
+
+    <string name="search_location">Search location</string>
+    <string name="confirm_location">Confirm location</string>
+
+    <string name="cd_add">Add</string>
+    <string name="cd_delete">Delete</string>
+    <string name="cd_breez_logo">Breez Logo</string>
+
+    <string name="splash_tagline">Forecast made calm</string>
+    <string name="back">Back</string>
+
+
+    <string name="unit_celsius_value">%1$s°C</string>
+    <string name="unit_fahrenheit_value">%1$s°F</string>
+    <string name="unit_kelvin_value">%1$s K</string>
+
+    <string name="unit_percent_value">%1$s%%</string>
+    <string name="unit_pressure_value">%1$s hPa</string>
+
+    <string name="unit_meters_per_second_value">%1$s m/s</string>
+    <string name="unit_kilometers_per_hour_value">%1$s km/h</string>
+    <string name="unit_miles_per_hour_value">%1$s mph</string>
+
+    <string name="cd_pick_time">Pick time</string>
+
+</resources>

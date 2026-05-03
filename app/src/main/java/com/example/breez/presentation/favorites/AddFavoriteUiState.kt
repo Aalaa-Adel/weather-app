@@ -1,6 +1,5 @@
 package com.example.breez.presentation.favorites
 
-
 sealed class AddFavoriteUiState {
     data class Idle(
         val selectedLocation: SelectedLocation? = null,

@@ -10,12 +10,4 @@ object AppGradients {
             DarkGradientBottom
         )
     )
-
-    val lightBackground = Brush.verticalGradient(
-        colors = listOf(
-            LightGradientTop,
-            LightGradientMid,
-            LightGradientBottom
-        )
-    )
 }

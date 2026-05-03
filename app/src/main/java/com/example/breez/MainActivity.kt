@@ -1,6 +1,7 @@
 package com.example.breez
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -27,10 +28,16 @@ import com.example.breez.presentation.navigation.NavGraph
 import com.example.breez.presentation.settings.SettingsViewModel
 import com.example.breez.presentation.theme.AppGradients
 import com.example.breez.presentation.theme.BreezTheme
+import com.example.breez.utils.LocalizationHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocalizationHelper.applySavedLanguage(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,23 +73,25 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 }
 @Composable
 fun WeatherScreenBackground(
     content: @Composable BoxScope.() -> Unit
 ) {
-    val isDarkTheme = MaterialTheme.colorScheme.background == com.example.breez.presentation.theme.DarkBackground
-
-    val brush = if (isDarkTheme) {
-        AppGradients.darkBackground
-    } else {
-        AppGradients.lightBackground
-    }
+    val isDarkTheme =
+        MaterialTheme.colorScheme.background == com.example.breez.presentation.theme.DarkBackground
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(brush)
+        modifier = if (isDarkTheme) {
+            Modifier
+                .fillMaxSize()
+                .background(AppGradients.darkBackground)
+        } else {
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        }
     ) {
         content()
     }

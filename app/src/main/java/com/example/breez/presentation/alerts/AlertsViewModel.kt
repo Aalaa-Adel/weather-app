@@ -3,6 +3,7 @@ package com.example.breez.presentation.alerts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.breez.data.db.entity.AlertEntity
+import com.example.breez.data.db.entity.FavoriteEntity
 import com.example.breez.data.notification.AlertScheduler
 import com.example.breez.data.notification.NotificationHelper
 import com.example.breez.data.repository.BreezRepository
@@ -106,16 +107,13 @@ class AlertsViewModel @Inject constructor(
     fun deleteAlert(alert: AlertEntity) {
         viewModelScope.launch {
             try {
-                alertScheduler.cancelAlert(alert.id)
-
                 repository.deleteAlert(alert)
-
-                _showToast.emit("Alert deleted")
             } catch (e: Exception) {
                 _showToast.emit("Failed to delete alert: ${e.message}")
             }
         }
     }
+
 
     fun checkNotificationPermission() {
         val currentState = _uiState.value
@@ -133,6 +131,19 @@ class AlertsViewModel @Inject constructor(
                 _showToast.emit("Test notification scheduled (5 seconds)")
             } catch (e: Exception) {
                 _showToast.emit("Test failed: ${e.message}")
+            }
+        }
+    }
+
+    fun addAlert(alert: AlertEntity) {
+        viewModelScope.launch {
+            try {
+                repository.insertAlert(alert)
+                if (alert.isActive) {
+                    alertScheduler.scheduleAlert(alert)
+                }
+            } catch (e: Exception) {
+                _showToast.emit("Failed to restore alert: ${e.message}")
             }
         }
     }

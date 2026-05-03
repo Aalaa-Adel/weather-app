@@ -2,8 +2,9 @@ package com.example.breez.presentation.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.breez.data.repository.BreezRepository
+import com.example.breez.data.datasource.preferences.SettingsPreferencesManager
 import com.example.breez.data.db.entity.FavoriteEntity
+import com.example.breez.data.repository.BreezRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,14 +17,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
-    private val repository: BreezRepository
+    private val repository: BreezRepository,
+    private val settingsManager: SettingsPreferencesManager
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow<FavoritesUiState>(FavoritesUiState.Loading)
     val uiState: StateFlow<FavoritesUiState> = _uiState.asStateFlow()
 
     private val _showToast = MutableSharedFlow<String>()
-    val showToast: SharedFlow<String> = _showToast.asSharedFlow()
+    val showToast: SharedFlow<String> =
+        _showToast.asSharedFlow()
+
+    private fun t(ar: String, en: String): String {
+        return if (settingsManager.getCurrentSettings().language.apiValue == "ar") ar else en
+    }
 
     init {
         loadFavorites()
@@ -40,14 +46,24 @@ class FavoritesViewModel @Inject constructor(
     fun deleteFavorite(favorite: FavoriteEntity) {
         viewModelScope.launch {
             repository.deleteFavorite(favorite)
-            _showToast.emit("Favorite deleted")
+            _showToast.emit(
+                t(
+                    ar = "تم حذف الموقع المفضل",
+                    en = "Favorite deleted"
+                )
+            )
         }
     }
 
     fun addFavorite(favorite: FavoriteEntity) {
         viewModelScope.launch {
             repository.insertFavorite(favorite)
-            _showToast.emit("Favorite added")
+            _showToast.emit(
+                t(
+                    ar = "تمت استعادة الموقع المفضل",
+                    en = "Favorite restored"
+                )
+            )
         }
     }
 }

@@ -11,8 +11,8 @@ sealed class FavoriteDetailsUiState {
     data class Success(
         val currentWeather: CurrentWeatherDto,
         val forecast: ForecastResponseDto,
-        val temperatureUnit: TemperatureUnit = TemperatureUnit.CELSIUS,
-        val windSpeedUnit: WindSpeedUnit = WindSpeedUnit.METERS_PER_SECOND
+        val temperatureUnit: TemperatureUnit,
+        val windSpeedUnit: WindSpeedUnit
     ) : FavoriteDetailsUiState()
 
     data class Error(

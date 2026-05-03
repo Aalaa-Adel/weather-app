@@ -154,4 +154,7 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk7)
     implementation(libs.androidx.fragment.ktx)
 
+    implementation("com.airbnb.android:lottie-compose:6.7.1")
+
+
 }
