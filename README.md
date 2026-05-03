@@ -34,7 +34,7 @@ The app provides real-time weather updates, hourly and 5-day forecasts, favorite
 - [Future Improvements](#-future-improvements)
 - [Release](#-release)
 - [License](#-license)
-- [Author](#-author)
+
 
 ---
 
