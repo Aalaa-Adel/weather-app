@@ -443,14 +443,3 @@ modify, merge, publish, distribute, sublicense, and/or sell copies of the Softwa
 
 ---
 
-## 👩‍💻 Author
-
-**Aalaa Adel Ahmed Ali**  
-Mobile Application Developer — Android & Flutter
-
-- GitHub: [Aalaa-Adel](https://github.com/Aalaa-Adel)
-- LinkedIn: Add your LinkedIn profile here
-
----
-
-## 💙 Made with Kotlin, Compose, and calm weather vibes.
